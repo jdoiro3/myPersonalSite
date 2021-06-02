@@ -40,20 +40,16 @@
     {% if posts %}
     {% for post in posts %}
       <div class="card">
-        <div class="post">
-          <img  style="float:right; margin-right: 15px;" class="post-image" src="{{ post.title_image.url }}"/>
-          <div class="post-content">
-            <p class="post-header"> <a href="/blog/post/{{ post.slug }}/">{{ post.title }}</a> </p>
-            <div class="post-text">{{ post.content | slice:"0:200" | safe }}</div>
-            <div class="author">
-              <img src="{{ post.author.userprofile.avatar.url }}" alt="" class="author-image">
-              <div class="author-content">
-                <p class="author-name">{{ post.author.first_name }}</p>
-                <p class="date">{{ post.updated_on }}</p>
-              </div>
-            </div>
+          <img class="post-image" src="{{ post.title_image.url }}"/>
+          <div class="author">
+            <img src="{{ post.author.userprofile.avatar.url }}" alt="" class="author-image">
+            <a class="author-name" href="www.google.com">{{ post.author.first_name }} {{ post.author.last_name }}</a>
+            <span class="date">, {{ post.updated_on }}</span>
           </div>
-        </div>
+          <div class="post-title">
+            <a href="/blog/post/{{ post.slug }}/">{{ post.title }}</a>
+          </div>
+          <div class="post-text">{{ post.content_short | slice:"0:400" }}</div>
       </div>
     {% endfor %}
     {% else %}

@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.template import loader
 import markdown
 import bleach
+from bs4 import BeautifulSoup
 
 from .models import Post, UserProfile, PostCategory
 
@@ -26,7 +27,7 @@ def index(request, category='All'):
 		posts = Post.objects.filter(status=1, category__categories__contains=category)
 	categories = PostCategory.objects.all()
 	for post in posts:
-		post.content = md.convert(bleach.clean(post.content))
+		post.content_short = BeautifulSoup(md.convert(bleach.clean(post.content)), features="html.parser").find('p').text
 	template = loader.get_template('blog/index.html')
 	context = {'posts': posts, 'categories': categories, 'category': category}
 	return HttpResponse(template.render(context, request))
