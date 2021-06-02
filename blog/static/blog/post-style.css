@@ -1,0 +1,173 @@
+/* 1. Enable smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+#edit-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 10%;
+}
+
+#edit {
+  background: transparent;
+  border: none;
+  transition-duration: 1s;
+}
+
+#edit:hover {
+  transform: scale(1.2);
+  transition-duration: 1s;
+}
+
+#edit i {
+  font-size:24px;
+}
+
+/* block element class for styling flex objects */
+.flex-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.flex-container-content {
+    display: flex;
+    flex-direction: row;
+}
+
+/* page header */
+header {
+    height: 500px;
+    background-size: cover;
+    background-position: top;
+    align-items: center;
+    margin-top: 46px;
+}
+
+
+#title {
+    color: white;
+    font-family: "Roboto Slab", serif;
+    font-size: 50px;
+    font-weight: normal;
+    text-align: center;
+    backdrop-filter: blur(5px);
+}
+
+#user-image {
+    margin-top: -50px;
+}
+
+#user-image img {
+    border-radius: 100%;
+    border: 1px solid white;
+    height: 150px;
+}
+
+#user-text p {
+    text-align: center;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 18px;
+    color: rgb(51, 51, 51);
+    line-height: 24px;
+    border-bottom: 2px solid #e6e6e6;
+    padding-bottom: 10px;
+    border-bottom-width: 2px;
+}
+
+#content {
+    padding-left: 5%;
+    padding-right: 5%;
+    margin: 10px;
+    margin-right: 10%;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    font-family: "Open Sans", sans-serif;
+    font-size: 16px;
+    color: #15202b;
+    width: 65vw;
+    line-height: 1.625;
+}
+
+
+.toc {
+  position: sticky;
+  left: 3em;
+  top: 5em;
+  padding: 1em;
+  width: 15vw;
+  line-height: 2;
+}
+
+.toc ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.toc ul ul {
+  padding-left: 2em;
+}
+
+.toc li a {
+  display: inline-block;
+  color: black;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.toc li a:hover {
+  color: #666;
+}
+
+.toc li.visible > a {
+  color: #111;
+  transform: translate(5px);
+}
+
+.toc-marker {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.toc-marker path {
+  transition: all 0.3s ease;
+}
+
+
+/* The navigation bar */
+.navbar {
+  overflow: hidden;
+  background-color: #333;
+  position: fixed; /* Set the navbar to fixed position */
+  top: 0; /* Position the navbar at the top of the page */
+  width: 100%; /* Full width */
+}
+
+/* Links inside the navbar */
+.navbar a {
+  float: left;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+/* Change background on mouse-over */
+.navbar a:hover {
+  background: #ddd;
+  color: black;
+}
+
+#content img {
+  max-width: 100%;
+  max-height: 1000px;
+  height: auto;
+  width: auto;
+}

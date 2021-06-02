@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'blog/index-style.css' %}">
+    <meta charset="utf-8">
+    <title>{{ post.title }}</title>
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro|Roboto+Slab" rel="stylesheet">
+  </head>
+  <body>
+
+    <div class="navbar">
+      <a href="/blog">Blog</a>
+      {% if request.user.is_authenticated %}
+        <a href="/admin">Admin</a>
+      {% endif %}
+    </div>
+
+    <input type="text" placeholder="Search Posts in Category" id="filter_posts"/>
+
+    <div class="select" tabindex="1">
+      {% if category == 'All' %}
+      <input class="selectopt" name="test" type="radio" id="opt0" checked>
+      {% else %}
+      <input class="selectopt" name="test" type="radio" id="opt0" checked>
+      {% endif %}
+      <label for="opt0" class="option">{{ category }}</label>
+      <input class="selectopt" name="test" type="radio" id="opt1" onclick="location.href='/blog/'">
+      <label for="opt1" class="option">All</label>
+      {% if categories %}
+      {% for cat in categories %}
+      <input class="selectopt" name="test" type="radio" id="opt{{ forloop.counter | add:1 }}" onclick="location.href='/blog/{{ cat }}/'">
+      <label for="opt{{ forloop.counter | add:1 }}" class="option">{{ cat }}</label>
+      {% endfor %}
+      {% endif %}
+    </div>
+
+    <div id="posts">
+    {% if posts %}
+    {% for post in posts %}
+      <div class="card">
+        <div class="post">
+          <img  style="float:right; margin-right: 15px;" class="post-image" src="{{ post.title_image.url }}"/>
+          <div class="post-content">
+            <p class="post-header"> <a href="/blog/post/{{ post.slug }}/">{{ post.title }}</a> </p>
+            <div class="post-text">{{ post.content | slice:"0:200" | safe }}</div>
+            <div class="author">
+              <img src="{{ post.author.userprofile.avatar.url }}" alt="" class="author-image">
+              <div class="author-content">
+                <p class="author-name">{{ post.author.first_name }}</p>
+                <p class="date">{{ post.updated_on }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+    {% else %}
+        <p>No posts are available.</p>
+    {% endif %}
+  </div>
+
+  </body>
+</html>

@@ -1,0 +1,2 @@
+
+function render_posts
