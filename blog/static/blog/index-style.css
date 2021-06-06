@@ -1,6 +1,9 @@
+@import url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css);
+
 body{
   background-color: #E4E6EB;
 }
+
 body::-webkit-scrollbar {
   display: none;
 }
@@ -8,18 +11,20 @@ body::-webkit-scrollbar {
 
 .card {
   width: 400px;
-  height: 500px;
+  min-height: 500px;
   background: rgb(255,255,255);
   background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(242,245,248,1) 35%, rgba(236,236,237,1) 100%);
   box-shadow: 0 13px 15px rgba(0, 0, 0, 0.3);
   margin-left: 1%;
   margin-top: 30px;
   transition-duration: 1s;
+  overflow: hidden;
 }
 
 .card:hover {
   transform: scale(1.03);
   transition-duration: 1s;
+  cursor: pointer;
 }
 
 .post-image {
@@ -31,11 +36,10 @@ body::-webkit-scrollbar {
   border: 2px solid red;
 }
 
-.post-title a {
+.post-title h1 {
   font-size: 28px;
   font-family: 'Roboto', sans-serif;
   color: #3B3C3F;
-  text-decoration: none;
 }
 
 .post-title {
@@ -50,15 +54,11 @@ body::-webkit-scrollbar {
   padding-right: 10px;
   color: #768CA4;
   font-family: 'Roboto', sans-serif;
+  word-wrap: break-word;
 }
 
 .post-text h1 {
   font-size: 18px;
-}
-
-.post-text a {
-  font-size: 18px;
-  height: 100%;
 }
 
 .author {
@@ -106,6 +106,7 @@ body::-webkit-scrollbar {
   position: fixed; /* Set the navbar to fixed position */
   top: 0; /* Position the navbar at the top of the page */
   width: 100%; /* Full width */
+  z-index: 5;
 }
 
 /* Links inside the navbar */
@@ -139,10 +140,11 @@ body::-webkit-scrollbar {
   margin-top: 10px;
   display:flex;
   flex-direction: column;
-  position:relative;
+  position: relative;
   width: 20%;
   height: 40px;
   color: white;
+  z-index: auto;
 }
 
 .option {
@@ -209,4 +211,30 @@ body::-webkit-scrollbar {
   width: 40px;
   content: '';
   background:#666;
+}
+
+.pagination {
+  background-color: #f2f2f2;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  overflow: hidden;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+.pagination a {
+  text-align: center;
+  color: #333;
+  font-size: 18px;
+  font-weight: 700;
+  transition: .3s linear;
+  font-family: "Open Sans", sans-serif;
+  text-decoration: none;
+}
+
+.pagination a:hover {
+  color: #eb4d4b;
 }

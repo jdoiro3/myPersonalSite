@@ -21,8 +21,12 @@
       <a href="#contact">Contact</a>
     </div>
 
-    <header class="flex-container" style="background-image: url({{ post.title_image.url }});">
-        <h1 id="title"> {{ post.title }} </h1>
+    {% if post.title_image %}
+      <header class="flex-container" style="background-image: url({{ post.title_image.url }});">
+    {% else %}
+      <header class="flex-container" style="background-color: CadetBlue;">
+    {% endif %}
+        <h1 id="title" style="color: {{ post.get_title_color_display }};"> {{ post.title }} </h1>
     </header>
 
     <div id="user-container" class="flex-container">
