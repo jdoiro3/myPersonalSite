@@ -1,21 +1,15 @@
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer
 import json
 import re
 from nltk.corpus import wordnet
 
-def get_synonyms(word):
-    synonyms = set()
-    for syn in wordnet.synsets(word):
-        for lemma in syn.lemma_names():
-            synonyms.add(lemma)
-    return synonyms
-
 class Document:
     
-    def __init__(self, Id, content):
+    def __init__(self, Id, *args):
         self.Id = Id
-        self.content = content
+        self.fields = args
         
 
 class Parser:
@@ -25,6 +19,7 @@ class Parser:
     def __init__(self, language='english'):
         self.language = language
         self.STOP_WORDS = set(stopwords.words(language))
+        self.ps = PorterStemmer()
         
     def _charFilter(self, content_str):
         content_str = content_str.lower()
@@ -37,12 +32,16 @@ class Parser:
             if token.isalpha() and not token in self.STOP_WORDS
         ]
         return tokens
+
+    def _stemTokens(self, tokens):
+        return [self.ps.stem(token) for token in tokens]
     
     def parse(self, content_str):
         filtered = self._charFilter(content_str)
         tokens = word_tokenize(filtered)
-        tokens_filtered = self._tokenFilter(tokens)
-        return set(tokens_filtered)
+        tokens = self._tokenFilter(tokens)
+        tokens = self._stemTokens(tokens)
+        return set(tokens)
         
         
 class InvertedIndex:
@@ -52,7 +51,9 @@ class InvertedIndex:
         self.index = dict()
     
     def add(self, document):
-        tokens = self.parser.parse(document.content)
+        tokens = set()
+        for field in document.fields:
+            tokens = tokens.union(self.parser.parse(field))
         for token in tokens:
             if token not in self.index:
                 self.index[token] = [document.Id]

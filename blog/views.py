@@ -29,7 +29,6 @@ def index(request, category='All'):
 	if query:
 		index = apps.get_app_config('blog').index
 		results = index.search(query)
-		print(results)
 		posts = Post.objects.filter(status=1, id__in=tuple(results))
 	elif category == 'All':
 		posts = Post.objects.filter(status=1)

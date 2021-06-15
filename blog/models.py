@@ -46,7 +46,7 @@ class Post(models.Model, ImageBase):
 
 	def save(self, *args, **kwargs):
 		self.slug = slugify(self.title)
-		doc = Document(self.pk, self.content)
+		doc = Document(self.pk, self.content, self.title, self.author.first_name, self.author.last_name)
 		index = apps.get_app_config('blog').index
 		index.add(doc)
 		index.save()
