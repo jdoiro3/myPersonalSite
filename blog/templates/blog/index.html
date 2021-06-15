@@ -12,12 +12,15 @@
 
     <div class="navbar">
       <a href="{% url 'blog-index' %}">Blog</a>
-      {% if request.user.is_authenticated %}
-        <a href="admin/">Admin</a>
-      {% endif %}
+      {% if request.user.is_authenticated %}<a href="{% url 'admin:index' %}">Admin</a>{% endif %}
     </div>
 
-    <input type="text" placeholder="Search Posts in Category" id="filter_posts"/>
+    <div class="search-container">
+      <form action="{% url 'blog-index' %}">
+        <input type="text" placeholder="Search Posts" id="filter_posts" name="q"/>
+        <button type="submit"><i class="fa fa-search"></i></button>
+      </form>
+    </div>
 
     <div class="select" tabindex="1">
       <input class="selectopt" name="test" type="radio" id="opt0" checked>
@@ -57,18 +60,20 @@
     {% endif %}
   </div>
 
-  <div class="pagination">
-    {% if posts.has_previous %}
-      <a href="?page={{ posts.previous_page_number }}"><i class="fas fa-chevron-left"></i></a>
-    {% else %}
-      <a href="?page=1"><i class="fas fa-chevron-left"></i></a>
-    {% endif %}
-    <span>Page {{ posts.number }} of {{ posts.paginator.num_pages }}.</span>
-    {% if posts.has_next %}
-      <a href="?page={{ posts.next_page_number }}"><i class="fas fa-chevron-right"></i></a>
-    {% else %}
-      <a href="?page={{ posts.number }}"><i class="fas fa-chevron-right"></i></a>
-    {% endif %}
+  <div id="pagination-container">
+    <ul id="pagination">
+      {% if posts.has_previous %}
+        <li class="arrow"><a href="?page={{ posts.previous_page_number }}"><i class="fas fa-chevron-left"></i></a></li>
+      {% else %}
+        <li class="arrow"><a href="?page=1"><i class="fas fa-chevron-left"></i></a></li>
+      {% endif %}
+      <li>Page <a href="?page={{ posts.number }}">{{ posts.number }}</a> of <a href="?page={{ posts.paginator.num_pages }}">{{ posts.paginator.num_pages }}</a></li>
+      {% if posts.has_next %}
+        <li class="arrow"><a href="?page={{ posts.next_page_number }}"><i class="fas fa-chevron-right"></i></a></li>
+      {% else %}
+        <li class="arrow"><a href="?page={{ posts.number }}"><i class="fas fa-chevron-right"></i></a></li>
+      {% endif %}
+    </ul>
   </div>
 
   </body>

@@ -4,6 +4,8 @@ from django.template.defaultfilters import slugify
 import os
 from hashlib import sha1
 from django.utils.html import mark_safe
+from django.apps import apps
+from modules.index import Document
 
 STATUS = (
 	(0, "Draft"),
@@ -15,19 +17,21 @@ TITLE_COLORS = (
 	(1, "black")
 	)
 
-class PostCategory(models.Model):
-	categories = models.CharField(max_length=20)
-
-	def __str__(self):
-		return self.categories
-
-class Post(models.Model):
+class ImageBase:
 
 	def image_dir(self, filename):
 		image = self.title_image.open()
 		content = image.read()
 		sha1_hash = sha1(content)
 		return f'{sha1_hash.hexdigest()[0:2]}/{sha1_hash.hexdigest()[2:]}'
+
+class PostCategory(models.Model):
+	categories = models.CharField(max_length=20)
+
+	def __str__(self):
+		return self.categories
+
+class Post(models.Model, ImageBase):
 
 	title = models.CharField(max_length=200, unique=True)
 	title_color = models.IntegerField(choices=TITLE_COLORS, default=0)
@@ -38,10 +42,14 @@ class Post(models.Model):
 	updated_on = models.DateField(auto_now=True)
 	content = models.TextField()
 	status = models.IntegerField(choices=STATUS, default=0)
-	title_image = models.ImageField(upload_to=image_dir, blank=True, max_length=255)
+	title_image = models.ImageField(upload_to=ImageBase.image_dir, blank=True, max_length=255)
 
 	def save(self, *args, **kwargs):
 		self.slug = slugify(self.title)
+		doc = Document(self.pk, self.content)
+		index = apps.get_app_config('blog').index
+		index.add(doc)
+		index.save()
 		super().save(*args, **kwargs)
 
 	@property
@@ -54,13 +62,7 @@ class Post(models.Model):
 		return self.title
 
 
-class PostImage(models.Model):
-
-	def image_dir(self, filename):
-		image = self.image.open()
-		content = image.read()
-		sha1_hash = sha1(content)
-		return f'{sha1_hash.hexdigest()[0:2]}/{sha1_hash.hexdigest()[2:]}'
+class PostImage(models.Model, ImageBase):
 
 	@property
 	def image_preview(self):
@@ -69,18 +71,11 @@ class PostImage(models.Model):
 		return ""
 
 	post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='blog_post')
-	image = models.ImageField(upload_to=image_dir)
+	image = models.ImageField(upload_to=ImageBase.image_dir)
 
 
 
-class UserProfile(models.Model):
-
-	def image_dir(self, filename):
-		image = self.avatar.open()
-		content = image.read()
-		sha1_hash = sha1(content)
-		ext = filename.split('.')[1]
-		return f'{sha1_hash.hexdigest()[0:2]}/{sha1_hash.hexdigest()[2:]}.{ext}'
+class UserProfile(models.Model, ImageBase):
 
 	@property
 	def avatar_preview(self):
@@ -89,4 +84,4 @@ class UserProfile(models.Model):
 		return ""
 
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
-	avatar = models.ImageField(upload_to=image_dir, blank=True, max_length=255)
+	avatar = models.ImageField(upload_to=ImageBase.image_dir, blank=True, max_length=255)

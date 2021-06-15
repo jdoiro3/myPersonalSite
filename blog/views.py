@@ -5,6 +5,7 @@ import bleach
 from bs4 import BeautifulSoup
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404
+from django.apps import apps
 
 from .models import Post, UserProfile, PostCategory
 
@@ -23,7 +24,14 @@ def post_detail(request, slug):
 
 def index(request, category='All'):
 	md = markdown.Markdown(extensions=['markdown.extensions.fenced_code', 'markdown.extensions.tables', 'extra'])
-	if category == 'All':
+
+	query = request.GET.get('q')
+	if query:
+		index = apps.get_app_config('blog').index
+		results = index.search(query)
+		print(results)
+		posts = Post.objects.filter(status=1, id__in=tuple(results))
+	elif category == 'All':
 		posts = Post.objects.filter(status=1)
 	else:
 		posts = Post.objects.filter(status=1, category__categories__contains=category)
