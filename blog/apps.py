@@ -7,6 +7,3 @@ class BlogConfig(AppConfig):
     name = 'blog'
     index = InvertedIndex()
 
-    def ready(self):
-    	self.index.save()
-
