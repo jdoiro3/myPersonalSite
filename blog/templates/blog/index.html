@@ -11,12 +11,15 @@
   <body>
 
     <div class="navbar">
-      <a href="{% url 'blog-index' %}">Blog</a>
-      {% if request.user.is_authenticated %}<a href="{% url 'admin:index' %}">Admin</a>{% endif %}
+      <a href="{% url 'blog:blog-index' %}">Blog</a>
+      {% if request.user.is_authenticated %}
+        <a href="{% url 'admin:index' %}">Admin</a>
+        <a href="{% url 'blog:new-post' %}">Create Post</a>
+      {% endif %}
     </div>
 
     <div class="search-container">
-      <form action="{% url 'blog-index' %}">
+      <form action="{% url 'blog:blog-index' %}">
         <input type="text" placeholder="Search Posts" id="filter_posts" name="q"/>
         <button type="submit"><i class="fa fa-search"></i></button>
       </form>
@@ -25,11 +28,11 @@
     <div class="select" tabindex="1">
       <input class="selectopt" name="test" type="radio" id="opt0" checked>
       <label for="opt0" class="option">{{ category }}</label>
-      <input class="selectopt" name="test" type="radio" id="opt1" onclick="location.href='{% url 'blog-index' %}'">
+      <input class="selectopt" name="test" type="radio" id="opt1" onclick="location.href='{% url 'blog:blog-index' %}'">
       <label for="opt1" class="option">All</label>
       {% if categories %}
       {% for cat in categories %}
-      <input class="selectopt" name="test" type="radio" id="opt{{ forloop.counter | add:1 }}" onclick="location.href='/{{ cat }}/'">
+      <input class="selectopt" name="test" type="radio" id="opt{{ forloop.counter | add:1 }}" onclick="location.href='{% url 'blog:index-specific-cat' cat %}'">
       <label for="opt{{ forloop.counter | add:1 }}" class="option">{{ cat }}</label>
       {% endfor %}
       {% endif %}
@@ -38,7 +41,7 @@
     <div id="posts">
     {% if posts %}
     {% for post in posts %}
-      <div class="card" onclick="location.href='{% url 'post-detail' post.slug %}'">
+      <div class="card" onclick="location.href='{% url 'blog:post-detail' post.slug %}'">
           {% if post.title_image %}
             <img class="post-image" src="{{ post.title_image.url }}"/>
           {% else %}
@@ -46,7 +49,7 @@
           {% endif %}
           <div class="author">
             <img src="{{ post.author.userprofile.avatar.url }}" alt="" class="author-image">
-            <a class="author-name" href="{% url 'specific-author' post.author.first_name post.author.last_name %}">{{ post.author.first_name }} {{ post.author.last_name }}</a>
+            <a class="author-name" href="{% url 'blog:specific-author' post.author.first_name post.author.last_name %}">{{ post.author.first_name }} {{ post.author.last_name }}</a>
             <span class="date">, {{ post.updated_on }}</span>
           </div>
           <div class="post-title">

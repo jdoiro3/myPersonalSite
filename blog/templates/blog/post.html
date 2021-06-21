@@ -19,7 +19,7 @@
 
     {% block navbar %}
     <div class="navbar">
-      <a href="{% url 'blog-index' %}">Home</a>
+      <a href="{% url 'blog:blog-index' %}">Home</a>
       <a href="#news">News</a>
       <a href="#contact">Contact</a>
     </div>
@@ -41,12 +41,14 @@
             <em>Last Updated {{ post.updated_on }}</em>
         </p>
       </div>
+      {% block user_select %}
+      {% endblock %}
     </div>
 
     {% block post_content %}
     {% if request.user == post.author %}
       <div id="edit-container">
-        <button id="edit" onclick="location.href='{% url 'post-change' post.id %}'" type="button"><i class="fa fa-edit"></i></button>
+        <button id="edit" onclick="location.href='{% url 'blog:post-edit' post.id %}'" type="button"><i class="fa fa-edit"></i></button>
       </div>
     {% endif %}
 

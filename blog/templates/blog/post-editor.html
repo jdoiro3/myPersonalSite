@@ -3,7 +3,7 @@
 {% block post_styling %}
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'blog/post-style.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'blog/post-change-style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'blog/post-editor-style.css' %}">
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 {% endblock %}
 
@@ -11,15 +11,23 @@
 <input id="title" form="save-changes" value="{{ post.title }}" name="title"></input>
 {% endblock %}
 
+{% block user_select %}
+<select name="user" id="user" form="save-changes">
+  {% for user in users %}
+  <option value="{{ user.id }}">{{ user.username }}</option>
+  {% endfor %}
+</select>
+{% endblock %}
+
 {% block post_content %}
 <div id="edit-toolbar">
-  <form id="save-changes" action="{% url 'post-detail' post.slug %}" method="post">
+  <form id="save-changes" action="{% url 'blog:post-detail' post.slug %}" method="post">
     {% csrf_token %}
     <button id="edit" type="submit"><i class="fas fa-share-square"></i></button>
   </form>
 </div>
 <div class="flex-container-content">
-  <div id="markdown-editor-container"><textarea spellcheck="true" id="markdown-editor" cols=120 form="save-changes" name="markdown">{{ post.content }}"</textarea></div>
+  <div id="markdown-editor-container"><textarea spellcheck="true" id="markdown-editor" cols=120 form="save-changes" name="markdown">{{ post.content }}</textarea></div>
   <div id="content"></div>
 </div>
 
