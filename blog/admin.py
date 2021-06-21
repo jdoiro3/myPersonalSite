@@ -46,7 +46,7 @@ class PostAdmin(admin.ModelAdmin):
 		return obj.title_image_preview
 
 	def response_change(self, request, obj):
-		return redirect(f'/blog/post/{obj.slug}')
+		return redirect(f'/post/{obj.slug}')
 
 	title_image_preview.short_description = 'Title Image Preview'
 	title_image_preview.allow_tags = True
