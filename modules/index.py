@@ -3,7 +3,7 @@ from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 import json
 import re
-from nltk.corpus import wordnet
+from pathlib import Path
 
 class Document:
     
@@ -46,9 +46,15 @@ class Parser:
         
 class InvertedIndex:
     
-    def __init__(self):
+    def __init__(self, from_file=True):
         self.parser = Parser()
-        self.index = dict()
+        self.index_json = Path("index.json")
+        if from_file:
+            if self.index_json.is_file():
+                with open(self.index_json, "r") as f:
+                    self.index = json.load(f)
+            else:
+                self.index = dict()
     
     def add(self, document):
         tokens = set()
@@ -63,7 +69,7 @@ class InvertedIndex:
                     self.index[token].append(document.Id)
                 
     def save(self):
-        with open("index.json", "w") as f:
+        with open(self.index_json, "w") as f:
             json.dump(self.index, f, indent=4)
 
     def search(self, search):

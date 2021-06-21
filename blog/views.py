@@ -7,11 +7,19 @@ from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404
 from django.apps import apps
 
-from .models import Post, UserProfile, PostCategory
+from .models import Post, User, PostCategory
 
 def post_detail(request, slug):
+
 	template = loader.get_template('blog/post.html')
 	post = get_object_or_404(Post, slug=slug)
+
+	if request.method == 'POST':
+		post.content = request.POST.get('markdown', '')
+		post.title = request.POST.get('title', '')
+		post.author = User.objects.get(id=request.POST.get('user', ''))
+		post.save()
+
 	md = markdown.Markdown(extensions=['toc', 'markdown.extensions.fenced_code', 'markdown.extensions.tables', 'extra'])
 	cleaned = bleach.clean(post.content, tags=['blockquote', 'span', 'a'])
 	post.content = md.convert(cleaned)
@@ -35,7 +43,7 @@ def index(request, category='All'):
 	else:
 		posts = Post.objects.filter(status=1, category__categories__contains=category)
 
-	paginator = Paginator(posts, 10)
+	paginator = Paginator(posts, 8)
 	page_number = request.GET.get('page', 1)
 	page_posts = paginator.get_page(page_number)
 
@@ -64,6 +72,23 @@ def author_index(request, author_first_name, author_last_name):
 	template = loader.get_template('blog/index.html')
 	context = {'posts': page_posts, 'categories': categories, 'category': 'All'}
 	return HttpResponse(template.render(context, request))
+
+def post_editor(request, Id):
+	template = loader.get_template('blog/post-editor.html')
+	post = get_object_or_404(Post, id=Id)
+	users = User.objects.all()
+	user_profile = post.author.userprofile
+	context = {'post': post, 'user_profile': user_profile, 'users': users}
+	return HttpResponse(template.render(context, request))
+
+def new_post(request):
+	template = loader.get_template('blog/post-editor.html')
+	post = Post(title="", author=request.user, content="", slug="new")
+	users = User.objects.all()
+	user_profile = post.author.userprofile
+	context = {'post': post, 'user_profile': user_profile, 'users': users}
+	return HttpResponse(template.render(context, request))
+
 
 
 
