@@ -25,11 +25,11 @@
     <div class="select" tabindex="1">
       <input class="selectopt" name="test" type="radio" id="opt0" checked>
       <label for="opt0" class="option">{{ category }}</label>
-      <input class="selectopt" name="test" type="radio" id="opt1" onclick="location.href='/blog/'">
+      <input class="selectopt" name="test" type="radio" id="opt1" onclick="location.href='{% url 'blog-index' %}'">
       <label for="opt1" class="option">All</label>
       {% if categories %}
       {% for cat in categories %}
-      <input class="selectopt" name="test" type="radio" id="opt{{ forloop.counter | add:1 }}" onclick="location.href='/blog/{{ cat }}/'">
+      <input class="selectopt" name="test" type="radio" id="opt{{ forloop.counter | add:1 }}" onclick="location.href='/{{ cat }}/'">
       <label for="opt{{ forloop.counter | add:1 }}" class="option">{{ cat }}</label>
       {% endfor %}
       {% endif %}

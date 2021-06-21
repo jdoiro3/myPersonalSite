@@ -1,0 +1,33 @@
+{% extends "blog/post.html" %}
+
+{% block post_styling %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'blog/post-style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'blog/post-change-style.css' %}">
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+{% endblock %}
+
+{% block title %}
+<input id="title" form="save-changes" value="{{ post.title }}" name="title"></input>
+{% endblock %}
+
+{% block post_content %}
+<div id="edit-toolbar">
+  <form id="save-changes" action="{% url 'post-detail' post.slug %}" method="post">
+    {% csrf_token %}
+    <button id="edit" type="submit"><i class="fas fa-share-square"></i></button>
+  </form>
+</div>
+<div class="flex-container-content">
+  <div id="markdown-editor-container"><textarea spellcheck="true" id="markdown-editor" cols=120 form="save-changes" name="markdown">{{ post.content }}"</textarea></div>
+  <div id="content"></div>
+</div>
+
+<script>
+  let markdown_elem = document.getElementById('markdown-editor');
+  document.getElementById('content').innerHTML = marked(markdown_elem.value);
+  markdown_elem.addEventListener("input", (event) => {
+    document.getElementById('content').innerHTML = marked(markdown_elem.value);
+  });
+</script>
+{% endblock %}

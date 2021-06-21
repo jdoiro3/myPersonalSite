@@ -45,7 +45,7 @@ body {
 
 /* page header */
 header {
-    height: 500px;
+    height: 30vh;
     background-size: cover;
     background-position: top;
     align-items: center;
@@ -62,21 +62,21 @@ header {
 }
 
 #user-image {
-    margin-top: -50px;
+    margin-top: -40px;
 }
 
 #user-image img {
     border-radius: 100%;
     border: 1px solid white;
-    height: 150px;
+    height: 15vh;
 }
 
 #user-text p {
+    margin-top: -5px;
     text-align: center;
     font-family: 'Source Sans Pro', sans-serif;
-    font-size: 18px;
+    font-size: 14px;
     color: rgb(51, 51, 51);
-    line-height: 24px;
     border-bottom: 2px solid CadetBlue;
     padding-bottom: 10px;
     border-bottom-width: 2px;
@@ -159,6 +159,7 @@ header {
   top: 0; /* Position the navbar at the top of the page */
   width: 100%; /* Full width */
   z-index: 1;
+  height: 46px;
 }
 
 /* Links inside the navbar */

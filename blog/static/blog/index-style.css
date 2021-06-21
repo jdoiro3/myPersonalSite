@@ -10,34 +10,31 @@ body::-webkit-scrollbar {
 
 
 .card {
-  width: 400px;
-  min-height: 500px;
-  background: rgb(255,255,255);
+  width: 20vw;
+  height: 50vh;
+  min-width: 200px;
   background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(242,245,248,1) 35%, rgba(236,236,237,1) 100%);
   box-shadow: 0 13px 15px rgba(0, 0, 0, 0.3);
   margin-left: 1%;
-  margin-top: 30px;
+  margin-top: 1%;
   transition-duration: 1s;
   overflow: hidden;
 }
 
 .card:hover {
   transform: scale(1.03);
+  box-shadow: 10px 30px 15px rgba(0, 0, 0, 0.3);
   transition-duration: 1s;
   cursor: pointer;
 }
 
 .post-image {
   width: 100%;
-  height: 40%;
-}
-
-.post-content {
-  border: 2px solid red;
+  height: 30%;
 }
 
 .post-title h1 {
-  font-size: 28px;
+  font-size: 18px;
   font-family: 'Roboto', sans-serif;
   color: #3B3C3F;
 }
@@ -49,16 +46,12 @@ body::-webkit-scrollbar {
 }
 
 .post-text {
-  font-size: 18px;
+  font-size: 12px;
   padding-left: 10px;
   padding-right: 10px;
   color: #768CA4;
   font-family: 'Roboto', sans-serif;
   word-wrap: break-word;
-}
-
-.post-text h1 {
-  font-size: 18px;
 }
 
 .author {
@@ -81,7 +74,7 @@ body::-webkit-scrollbar {
 }
 
 .author-name {
-  font-size: 14px;
+  font-size: 12px;
   margin-right: 0px;
   color: #3B3C3F;
   font-family: 'Roboto', sans-serif;
@@ -128,6 +121,8 @@ body::-webkit-scrollbar {
 #posts {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
 }
 
 #filter_posts {
@@ -234,9 +229,7 @@ body::-webkit-scrollbar {
 
 #pagination a {
   text-align: center;
-  color: #333;
-  font-size: 18px;
-  font-family: "Open Sans", sans-serif;
+  color: black;
   text-decoration: none;
   border-radius: 50%;
 }
@@ -248,3 +241,4 @@ body::-webkit-scrollbar {
 #pagination a:hover {
   color: #eb4d4b;
 }
+
