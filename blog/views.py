@@ -12,13 +12,20 @@ from .models import Post, User, PostCategory
 def post_detail(request, slug):
 
 	template = loader.get_template('blog/post.html')
-	post = get_object_or_404(Post, slug=slug)
 
 	if request.method == 'POST':
-		post.content = request.POST.get('markdown', '')
-		post.title = request.POST.get('title', '')
-		post.author = User.objects.get(id=request.POST.get('user', ''))
+		try:
+			post = Post.objects.get(id=request.POST.get('post-id', -1))
+			post.content = request.POST.get('markdown', '')
+			post.title = request.POST.get('title', '')
+			post.author = User.objects.get(id=request.POST.get('user', ''))
+			post.status = request.POST.get('status', '')
+		except Post.DoesNotExist:
+			post = Post(content=request.POST.get('markdown', ''), title=request.POST.get('title', ''), author=User.objects.get(id=request.POST.get('user', '')), status=request.POST.get('status', ''))
 		post.save()
+	
+	post = get_object_or_404(Post, slug=slug)
+
 
 	md = markdown.Markdown(extensions=['toc', 'markdown.extensions.fenced_code', 'markdown.extensions.tables', 'extra'])
 	cleaned = bleach.clean(post.content, tags=['blockquote', 'span', 'a'])
@@ -40,6 +47,8 @@ def index(request, category='All'):
 		posts = Post.objects.filter(status=1, id__in=tuple(results))
 	elif category == 'All':
 		posts = Post.objects.filter(status=1)
+	elif category == 'Drafts':
+		posts = Post.objects.filter(status=0)
 	else:
 		posts = Post.objects.filter(status=1, category__categories__contains=category)
 
