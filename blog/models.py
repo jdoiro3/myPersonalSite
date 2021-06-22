@@ -47,6 +47,8 @@ class Post(models.Model):
 		self.slug = slugify(self.title)
 		doc = Document(self.pk, self.content, self.title, self.author.first_name, self.author.last_name)
 		index = apps.get_app_config('blog').index
+		if self.pk is not None:
+			index.remove(doc)
 		index.add(doc)
 		index.save()
 		super().save(*args, **kwargs)

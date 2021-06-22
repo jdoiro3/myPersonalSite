@@ -10,6 +10,12 @@ class Document:
     def __init__(self, Id, *args):
         self.Id = Id
         self.fields = args
+
+    def getTokens(self, parser):
+        tokens = set()
+        for field in self.fields:
+            tokens = tokens.union(parser.parse(field))
+        return tokens
         
 
 class Parser:
@@ -57,9 +63,7 @@ class InvertedIndex:
                 self.index = dict()
     
     def add(self, document):
-        tokens = set()
-        for field in document.fields:
-            tokens = tokens.union(self.parser.parse(field))
+        tokens = document.getTokens(self.parser)
         for token in tokens:
             if token not in self.index:
                 self.index[token] = [document.Id]
@@ -67,6 +71,11 @@ class InvertedIndex:
                 docs = self.index[token]
                 if document.Id not in docs:
                     self.index[token].append(document.Id)
+
+    def remove(self, document):
+        for doc_entries in self.index.values():
+            if document.Id in doc_entries:
+                doc_entries.remove(document.Id)
                 
     def save(self):
         with open(self.index_json, "w") as f:
