@@ -4,6 +4,25 @@
     height: 80vh;
 }
 
+.toolbar-item {
+  background: transparent;
+  border: none;
+}
+
+.toolbar-item:hover {
+  cursor: pointer;
+}
+
+.toolbar-item i {
+  font-size:24px;
+}
+
+#status, #user {
+  font-size: 15px;
+  border: solid 2px black;
+  margin-left: 5px;
+}
+
 #title {
     font-size: 50px;
     font-weight: normal;
@@ -53,4 +72,51 @@ textarea {
 
 #edit-toolbar {
   margin-bottom: 5px;
+  display: flex;
+}
+
+/* The popup form - hidden by default */
+.form-popup {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 500px;
+  height: 600px;
+  margin-left: -250px;
+  margin-top: -200px;
+  z-index: 9;
+}
+
+/* Add styles to the form container */
+.form-container {
+  padding: 10px;
+  background-color: white;
+}
+
+/* Set a style for the submit/login button */
+.form-container .btn {
+  background-color: #04AA6D;
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  margin-bottom:10px;
+  opacity: 0.8;
+}
+
+/* Add a red background color to the cancel button */
+.form-container .cancel {
+  background-color: black;
+}
+
+/* Add some hover effects to buttons */
+.form-container .btn:hover, .open-button:hover {
+  opacity: 1;
+}
+
+.form-container textarea {
+  width: 100%;
+  resize: none;
 }
