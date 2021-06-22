@@ -4,7 +4,7 @@
   <head>
     {% load static %}
     {% block post_styling %}
-    <link rel="stylesheet" type="text/css" href="{% static 'blog/post-style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'blog/post.css' %}">
     {% endblock %}
     <meta charset="utf-8">
     <title>{{ post.title }}</title>
@@ -20,8 +20,11 @@
     {% block navbar %}
     <div class="navbar">
       <a href="{% url 'blog:blog-index' %}">Home</a>
-      <a href="#news">News</a>
-      <a href="#contact">Contact</a>
+      {% if request.user.is_authenticated %}
+        <a href="{% url 'admin:index' %}">Admin</a>
+        <a href="{% url 'blog:new-post' %}">New Post</a>
+        <a href="{% url 'blog:index-specific-cat' 'Drafts' %}">Drafts</a>
+      {% endif %}
     </div>
     {% endblock %}
 
@@ -64,6 +67,9 @@
           {{ post.content | safe }} 
       </div>
     </div>
+    {% endblock %}
+
+    {% block additions %}
     {% endblock %}
 
   </body>
