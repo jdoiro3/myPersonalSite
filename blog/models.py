@@ -45,13 +45,14 @@ class Post(models.Model):
 
 	def save(self, *args, **kwargs):
 		self.slug = slugify(self.title)
+		super().save(*args, **kwargs)
+		# update index
 		doc = Document(self.pk, self.content, self.title, self.author.first_name, self.author.last_name)
 		index = apps.get_app_config('blog').index
 		if self.pk is not None:
 			index.remove(doc)
 		index.add(doc)
 		index.save()
-		super().save(*args, **kwargs)
 
 	@property
 	def title_image_preview(self):
@@ -63,14 +64,19 @@ class Post(models.Model):
 		return self.title
 
 
-class PostImage(models.Model):
+class Image(models.Model):
 
 	def image_dir(self, filename):
+		# process the file and return the path where it will be saved
 		image = self.image.open()
 		content = image.read()
 		sha1_hash = sha1(content)
 		ext = filename.split('.')[1]
 		return f'{sha1_hash.hexdigest()[0:2]}/{sha1_hash.hexdigest()[2:]}.{ext}'
+
+	user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_images')
+	original_name = models.CharField(max_length=200)
+	image = models.ImageField(upload_to=image_dir)
 
 	@property
 	def image_preview(self):
@@ -78,11 +84,9 @@ class PostImage(models.Model):
 			return mark_safe('<img src="{0}" width="{1}" height="{2}" />'.format(self.image.url, min(500, self.image.width), min(500, self.image.height)))
 		return ""
 
-	post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='blog_post')
-	image = models.ImageField(upload_to=image_dir)
-
-
-
+	def __str__(self):
+		return self.original_name
+	
 class UserProfile(models.Model):
 
 	def image_dir(self, filename):

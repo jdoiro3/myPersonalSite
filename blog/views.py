@@ -1,13 +1,15 @@
+from django import template
 from django.http import HttpResponse
 from django.template import loader
 import markdown
 import bleach
+import json
 from bs4 import BeautifulSoup
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404
 from django.apps import apps
 
-from .models import Post, User, PostCategory
+from .models import Post, User, PostCategory, Image
 
 def post_detail(request, slug):
 
@@ -20,6 +22,7 @@ def post_detail(request, slug):
 			post.title = request.POST.get('title', '')
 			post.author = User.objects.get(id=request.POST.get('user', ''))
 			post.status = request.POST.get('status', '')
+			post.category = PostCategory.objects.get(id=request.POST.get('category', ''))
 		except Post.DoesNotExist:
 			post = Post(content=request.POST.get('markdown', ''), title=request.POST.get('title', ''), author=User.objects.get(id=request.POST.get('user', '')), status=request.POST.get('status', ''))
 		post.save()
@@ -69,7 +72,7 @@ def author_index(request, author_first_name, author_last_name):
 	md = markdown.Markdown(extensions=['markdown.extensions.fenced_code', 'markdown.extensions.tables', 'extra'])
 	posts = Post.objects.filter(status=1, author__first_name__contains=author_first_name, author__last_name__contains=author_last_name)
 
-	paginator = Paginator(posts, 10)
+	paginator = Paginator(posts, 8)
 	page_number = request.GET.get('page', 1)
 	page_posts = paginator.get_page(page_number)
 
@@ -82,21 +85,43 @@ def author_index(request, author_first_name, author_last_name):
 	context = {'posts': page_posts, 'categories': categories, 'category': 'All'}
 	return HttpResponse(template.render(context, request))
 
+def _get_edit_context(post):
+	users = User.objects.all()
+	categories = PostCategory.objects.all()
+	user_profile = post.author.userprofile
+	return {'post': post, 'user_profile': user_profile, 'users': users, 'categories': categories}
+
+
 def post_editor(request, Id):
 	template = loader.get_template('blog/post-editor.html')
 	post = get_object_or_404(Post, id=Id)
-	users = User.objects.all()
-	user_profile = post.author.userprofile
-	context = {'post': post, 'user_profile': user_profile, 'users': users}
+	context = _get_edit_context(post)
 	return HttpResponse(template.render(context, request))
 
 def new_post(request):
 	template = loader.get_template('blog/post-editor.html')
 	post = Post(title="", author=request.user, content="", slug="new")
-	users = User.objects.all()
-	user_profile = post.author.userprofile
-	context = {'post': post, 'user_profile': user_profile, 'users': users}
+	context = _get_edit_context(post)
 	return HttpResponse(template.render(context, request))
+
+def post_image_upload(request):
+	image = request.FILES.get('image')
+	post_image = Image(user=User.objects.get(id=request.POST.get('user', '')), original_name=image.name, image=image)
+	post_image.save()
+	data = json.dumps({'image_url': post_image.image.url})
+	return HttpResponse(data, content_type='application/json')
+
+def delete_post(request, Id):
+	template = loader.get_template('blog/post-delete.html')
+	post = get_object_or_404(Post, id=Id)
+	post.delete()
+	context = {'post': post}
+	return HttpResponse(template.render(context, request))
+
+
+
+
+
 
 
 

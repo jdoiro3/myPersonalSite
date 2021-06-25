@@ -6,11 +6,11 @@
 <link rel="stylesheet" type="text/css" href="{% static 'blog/post-editor.css' %}">
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="{% static 'blog/post-editor.js' %}"></script>
+<script src="{% static 'blog/post-editor.js' %}" defer></script>
 {% endblock %}
 
 {% block title %}
-<input id="title" form="save-changes" value="{{ post.title }}" name="title" oninput="updateSaveAction()"></input>
+<input id="title" form="save-changes" value="{{ post.title }}" name="title" oninput="updateSaveAction()" required></input>
 {% endblock %}
 
 {% block user_select %}
@@ -19,22 +19,43 @@
   <option value="{{ user.id }}">{{ user.username }}</option>
   {% endfor %}
 </select>
+<!-- add a header image button -->
+<button id="add-header-image" class="toolbar-item" type="button" title="add header image"><i class="fas fa-image"></i></button>
+<input style="display: none;" id="add-header-image-input" class="toolbar-item" type="file" accept="image/*" name="header-image" onchange="uploadImage('{% url 'blog:add-image' %}', '{{ request.user.id }}', this, addImageHeader)">
 {% endblock %}
 
 {% block post_content %}
 <div id="edit-toolbar">
+  
+  <!-- save changes form -->
   <form id="save-changes" action="{% url 'blog:post-detail' post.slug %}" method="post">
     {% csrf_token %}
     <input type="hidden" value={% if post.id %}"{{ post.id }}"{% else %}"-1"{% endif %} name="post-id" id="post-id">
-    <button id="save" class="toolbar-item" type="submit"><i class="fas fa-share-square"></i></button>
-    <button id="delete" class="toolbar-item" type="submit"><i class="fas fa-trash-alt"></i></button>
-    <button id="add-image" class="toolbar-item" type="button"><i class="fas fa-image"></i></button>
+    <button id="save" class="toolbar-item" type="submit" title="save changes"><i class="fas fa-share-square"></i></button>
   </form>
-  <button class="toolbar-item" onclick="openForm()"><i class="fas fa-quote-left"></i></button>
+  {% if post.id %}
+  <!-- delete post form -->
+  <form onsubmit="return confirm('Are you sure you want to delete this post?');" action="{% url 'blog:delete-post' post.id %}">
+    <button id="delete" class="toolbar-item" type="submit" title="delete post"><i class="fas fa-trash-alt"></i></button>
+  </form>
+  {% endif %}
+  <!-- add image to post button -->
+  <button id="add-image-button" class="toolbar-item" type="button" title="add image to post"><i class="fas fa-image"></i></button>
+  <input style="display: none;" id="add-image-input" class="toolbar-item" type="file" accept="image/*" name="image" onchange="uploadImage('{% url 'blog:add-image' %}', '{{ request.user.id }}', this, addImageToPost)">
+  <!-- add quote button. displays a form -->
+  <button class="toolbar-item" onclick="openForm('quote-form')" title="add quote to post"><i class="fas fa-quote-left"></i></button>
+  <!-- selector for the post's status -->
   <select name="status" id="status" class="toolbar-item" form="save-changes">
     <option value="1">Publish</option>
     <option value="0">Draft</option>
   </select>
+  <!-- selector for the post's category -->
+  <select name="category" id="category" class="toolbar-item" form="save-changes">
+    {% for cat in categories %}
+    <option value="{{ cat.id }}">{{ cat }}</option>
+    {% endfor %}
+  </select>
+
 </div>
 <div class="flex-container-content">
   <div id="markdown-editor-container"><textarea spellcheck="true" id="markdown-editor" cols=120 form="save-changes" name="markdown">{{ post.content }}</textarea></div>
@@ -52,14 +73,14 @@
 {% endblock %}
 
 {% block additions %}
-<div class="form-popup" id="myForm">
+<div class="form-popup" id="quote-form">
   <form class="form-container">
     <textarea type="text" placeholder="Enter Quote" name="quote" id="quote" rows=5></textarea>
     <input type="text" placeholder="Citation text" name="citation" id="citation">
     <input type="url" placeholder="Citation url" name="citation-url" id="citation-url">
     <output name="result" id="result" for="a b"></output>
-    <button type="button" class="btn cancel" onclick="setTextToCurrentPos()">Add</button>
-    <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+    <button type="button" class="btn cancel" onclick="addQuote()">Add</button>
+    <button type="button" class="btn cancel" onclick="closeForm('quote-form')">Close</button>
   </form>
 </div>
 {% endblock %}

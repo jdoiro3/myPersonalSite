@@ -8,7 +8,6 @@ body::-webkit-scrollbar {
   display: none;
 }
 
-
 .card {
   width: 20vw;
   height: 50vh;
@@ -18,7 +17,6 @@ body::-webkit-scrollbar {
   margin-left: 1%;
   margin-top: 1%;
   transition-duration: 1s;
-  overflow: hidden;
 }
 
 .card:hover {
@@ -30,7 +28,7 @@ body::-webkit-scrollbar {
 
 .post-image {
   width: 100%;
-  height: 30%;
+  height: 40%;
 }
 
 .post-title h1 {
@@ -46,12 +44,15 @@ body::-webkit-scrollbar {
 }
 
 .post-text {
-  font-size: 12px;
+  font-size: 15px;
   padding-left: 10px;
   padding-right: 10px;
   color: #768CA4;
   font-family: 'Roboto', sans-serif;
-  word-wrap: break-word;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 6;
+  overflow: hidden;
 }
 
 .author {
@@ -86,7 +87,7 @@ body::-webkit-scrollbar {
 }
 
 .date {
-  font-size: 14px;
+  font-size: 12px;
   margin-left: -5px;
   color: #3B3C3F;
   font-family: 'Roboto', sans-serif;
@@ -240,5 +241,44 @@ body::-webkit-scrollbar {
 
 #pagination a:hover {
   color: #eb4d4b;
+}
+
+@media all and (display-mode: fullscreen) {
+
+  #posts {
+    flex-direction: column;
+  }
+
+}
+
+@media only screen and (max-width: 1000px) {
+  
+  .card {
+    width: 70vw;
+    height: 50vh;
+    min-width: auto;
+  }
+
+  .post-image {
+    width: 100%;
+    height: 40%;
+  }
+
+  .post-title h1 {
+    font-size: 20px;
+    margin-top: -8px;
+  }
+
+  .post-text {
+    margin-top: -8px;
+  }
+
+  .select {
+    width: 25%;
+  }
+
+  #filter_posts {
+    width: 50vw;
+  }
 }
 

@@ -1,3 +1,13 @@
+#add-header-image {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+#user-container {
+  position: relative;
+}
+
 .flex-container-content {
     display: flex;
     flex-direction: row;
@@ -17,7 +27,7 @@
   font-size:24px;
 }
 
-#status, #user {
+#status, #user, #category {
   font-size: 15px;
   border: solid 2px black;
   margin-left: 5px;

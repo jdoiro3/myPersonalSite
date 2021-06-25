@@ -43,7 +43,7 @@ body {
 
 /* page header */
 header {
-    height: 30vh;
+    height: 40vh;
     background-size: cover;
     background-position: top;
     align-items: center;
@@ -89,7 +89,7 @@ header {
     font-family: "Open Sans", sans-serif;
     font-size: 16px;
     color: #15202b;
-    width: 65vw;
+    width: 100vw;
     line-height: 1.625;
     background-color: white;
     word-wrap: break-word;
@@ -107,6 +107,8 @@ header {
   top: 5em;
   padding: 1em;
   line-height: 2;
+  height: 80vh;
+  overflow-y: scroll;
 }
 
 .toc ul {
@@ -219,4 +221,33 @@ header {
   font-style: normal;
   font-weight: bold;
   margin-top:1em;
+}
+
+@media only screen and (max-width: 600px) {
+  .toc {
+    display: none;
+  }
+
+  #title {
+    font-size: 25px;
+  }
+
+  #user-image img {
+    height: 10vh;
+  }
+
+  #content {
+    margin-right: auto;
+    margin: 1vw;
+    width: 80vw;
+    font-size: 50%;
+  }
+
+  .flex-container-content {
+    justify-content: center;
+  }
+
+  #edit-container {
+    margin-right: auto;
+  }
 }
