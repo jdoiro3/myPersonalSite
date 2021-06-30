@@ -2,14 +2,13 @@
 
 {% block post_styling %}
 {% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'blog/post.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'blog/post-editor.css' %}">
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="{% static 'blog/post-editor.js' %}" defer></script>
 {% endblock %}
 
-{% block title %}
+{% block post_title %}
 <input id="title" form="save-changes" value="{{ post.title }}" name="title" oninput="updateSaveAction()" required></input>
 {% endblock %}
 
@@ -19,18 +18,20 @@
   <option value="{{ user.id }}">{{ user.username }}</option>
   {% endfor %}
 </select>
+
 <!-- add a header image button -->
 <button id="add-header-image" class="toolbar-item" type="button" title="add header image"><i class="fas fa-image"></i></button>
-<input style="display: none;" id="add-header-image-input" class="toolbar-item" type="file" accept="image/*" name="header-image" onchange="uploadImage('{% url 'blog:add-image' %}', '{{ request.user.id }}', this, addImageHeader)">
+<input style="display: none;" id="add-header-image-input" type="file" accept="image/*" name="header-image" onchange="uploadImage('{% url 'blog:add-image' %}', '{{ request.user.id }}', this, addImageHeader)">
+<!-- this stores the header's image id when a new image is uploaded via the fetch API -->
+<input style="display: none;" id="header-image-id" type="number" form="save-changes" name="header-image-id" {% if post.title_image is not None %}value={{ post.title_image.id }}{% else %}value="-1"{% endif %}></input>
 {% endblock %}
 
 {% block post_content %}
 <div id="edit-toolbar">
-  
   <!-- save changes form -->
   <form id="save-changes" action="{% url 'blog:post-detail' post.slug %}" method="post">
     {% csrf_token %}
-    <input type="hidden" value={% if post.id %}"{{ post.id }}"{% else %}"-1"{% endif %} name="post-id" id="post-id">
+    <input type="hidden" {% if post.id %}value="{{ post.id }}"{% else %}value="-1"{% endif %} name="post-id" id="post-id">
     <button id="save" class="toolbar-item" type="submit" title="save changes"><i class="fas fa-share-square"></i></button>
   </form>
   {% if post.id %}
@@ -50,13 +51,20 @@
     <option value="0">Draft</option>
   </select>
   <!-- selector for the post's category -->
-  <select name="category" id="category" class="toolbar-item" form="save-changes">
+  <select name="category" id="category" class="toolbar-item" form="save-changes" required>
+    {% if post.category == None %}
+    <option label=" " style="display: none;" selected="selected"></option>
+    {% endif %}
     {% for cat in categories %}
+    {% if post.category == cat %}
+    <option value="{{ cat.id }}" selected="selected">{{ cat }}</option>
+    {% else %}
     <option value="{{ cat.id }}">{{ cat }}</option>
+    {% endif %}
     {% endfor %}
   </select>
-
 </div>
+
 <div class="flex-container-content">
   <div id="markdown-editor-container"><textarea spellcheck="true" id="markdown-editor" cols=120 form="save-changes" name="markdown">{{ post.content }}</textarea></div>
   <div id="content"></div>

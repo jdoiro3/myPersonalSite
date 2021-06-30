@@ -66,17 +66,21 @@ document.getElementById('add-header-image').addEventListener('click', function(e
     document.getElementById('add-header-image-input').click();
 });
 
-function addImageToPost(image_url) {
+function addImageToPost(image) {
     let curPos = document.getElementById("markdown-editor").selectionStart;
     let content = $("#markdown-editor").val();
+    let image_url = image['url'];
     let text_to_insert = `![image](${image_url})`;
     $("#markdown-editor").val(content.slice(0, curPos) + text_to_insert + content.slice(curPos));
     document.getElementById('content').innerHTML = marked(markdown_elem.value);
 }
 
-function addImageHeader(image_url) {
+function addImageHeader(image) {
     let header = document.getElementById("post-header");
+    let header_image_input = document.getElementById("header-image-id");
+    let image_url = image['url'];
     header.style = `background-image: url(${image_url});`
+    header_image_input.value = image["id"];
 }
 
 
@@ -102,7 +106,7 @@ function uploadImage(endpoint, user, input, dom_action_func) {
     ).then(
         image_data => {
             console.log(image_data);
-            dom_action_func(image_data['image_url']);
+            dom_action_func(image_data['image']);
         }
     ).catch(
         error => console.log(error)

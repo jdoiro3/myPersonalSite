@@ -12,6 +12,9 @@
     display: flex;
     flex-direction: row;
     height: 80vh;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 .toolbar-item {
@@ -83,6 +86,7 @@ textarea {
 #edit-toolbar {
   margin-bottom: 5px;
   display: flex;
+  margin-left: 5px;
 }
 
 /* The popup form - hidden by default */

@@ -1,27 +1,28 @@
 <!DOCTYPE html>
 <html>
 
-  <head>
-    {% load static %}
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% block post_styling %}
-    <link rel="stylesheet" type="text/css" href="{% static 'blog/post.css' %}">
+  {% include "blog/default-head.html" %}
+
+  {% block title %}<title>{{ post.title }}</title>{% endblock %}
+    
+  {% block head %}
+      {% load static %}
+      <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/styles/default.min.css">
+      <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+      <link rel="stylesheet" type="text/css" href="{% static 'blog/post.css' %}">
+      {% block post_styling %}{% endblock %}
+    {% block js %}
+      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script>
     {% endblock %}
-    <meta charset="utf-8">
-    <title>{{ post.title }}</title>
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/styles/default.min.css">
-    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/highlight.min.js"></script>
-    <script>hljs.highlightAll();</script>
-  </head>
+  {% endblock %}
 
   <body>
 
     {% include "blog/top-navbar.html" %}
 
-    <header id="post-header" class="flex-container" style={% if post.title_image %}"background-image: url({{ post.title_image.url }});" {% else %}"background-color: CadetBlue;"{% endif %}>
-      {% block title %}
+    <header id="post-header" class="flex-container" style={% if post.title_image %}"background-image: url({{ post.title_image.image.url }});" {% else %}"background-color: CadetBlue;"{% endif %}>
+      {% block post_title %}
       <h1 id="title" style="color: {{ post.get_title_color_display }};"> {{ post.title }} </h1>
       {% endblock %}
     </header>
@@ -49,7 +50,7 @@
 
     <div class="flex-container-content">
       {% if toc %}
-      <nav class="toc-nav">
+      <nav id="toc-nav">
           {{ toc | safe }}
       </nav>
       <div id="content">

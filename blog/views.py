@@ -14,34 +14,49 @@ from .models import Post, User, PostCategory, Image
 def post_detail(request, slug):
 
 	template = loader.get_template('blog/post.html')
+	md = markdown.Markdown(extensions=['toc', 'markdown.extensions.fenced_code', 'markdown.extensions.tables', 'extra'])
 
 	if request.method == 'POST':
+		header_image_id = request.POST.get('header-image-id')
+		if header_image_id != "-1":
+			image = Image.objects.get(id=header_image_id)
+		else:
+			image = None
 		try:
-			post = Post.objects.get(id=request.POST.get('post-id', -1))
-			post.content = request.POST.get('markdown', '')
-			post.title = request.POST.get('title', '')
-			post.author = User.objects.get(id=request.POST.get('user', ''))
-			post.status = request.POST.get('status', '')
-			post.category = PostCategory.objects.get(id=request.POST.get('category', ''))
+			post = Post.objects.get(id=request.POST.get('post-id'))
+			post.content = bleach.clean(request.POST.get('markdown'), tags=['blockquote', 'span', 'a'])
+			post.first_paragraph = BeautifulSoup(md.convert(bleach.clean(post.content)), features="html.parser").find('p').text
+			post.title = request.POST.get('title')
+			post.author = User.objects.get(id=request.POST.get('user'))
+			post.status = request.POST.get('status')
+			post.category = PostCategory.objects.get(id=request.POST.get('category'))
+			header_image_id = request.POST.get('header-image-id')
+			post.title_image = image
 		except Post.DoesNotExist:
-			post = Post(content=request.POST.get('markdown', ''), title=request.POST.get('title', ''), author=User.objects.get(id=request.POST.get('user', '')), status=request.POST.get('status', ''))
+			content = bleach.clean(request.POST.get('markdown'), tags=['blockquote', 'span', 'a'])
+			post = Post(
+				content = content, 
+				first_paragraph = BeautifulSoup(md.convert(bleach.clean(content)), features="html.parser").find('p').text,
+				title = request.POST.get('title', ''), 
+				author = User.objects.get(id=request.POST.get('user')), 
+				status = request.POST.get('status'),
+				title_image = image
+				)
 		post.save()
 	
 	post = get_object_or_404(Post, slug=slug)
-
-
-	md = markdown.Markdown(extensions=['toc', 'markdown.extensions.fenced_code', 'markdown.extensions.tables', 'extra'])
-	cleaned = bleach.clean(post.content, tags=['blockquote', 'span', 'a'])
-	post.content = md.convert(cleaned)
+	# convert markdown to html server-side
+	post.content = md.convert(post.content)
+	categories = PostCategory.objects.all()
 	user_profile = post.author.userprofile
 	if md.toc_tokens:
-		context = {'post': post, 'toc': md.toc, 'user_profile': user_profile}
+		context = {'post': post, 'toc': md.toc, 'user_profile': user_profile, 'categories': categories}
 	else:
-		context = {'post': post, 'user_profile': user_profile}
+		context = {'post': post, 'user_profile': user_profile, 'categories': categories}
 	return HttpResponse(template.render(context, request))
 
 def index(request, category='All'):
-	md = markdown.Markdown(extensions=['markdown.extensions.fenced_code', 'markdown.extensions.tables', 'extra'])
+	template = loader.get_template('blog/index.html')
 
 	query = request.GET.get('q')
 	if query:
@@ -58,29 +73,17 @@ def index(request, category='All'):
 	paginator = Paginator(posts, 8)
 	page_number = request.GET.get('page', 1)
 	page_posts = paginator.get_page(page_number)
-
 	categories = PostCategory.objects.all()
 
-	for post in page_posts:
-		post.content_short = BeautifulSoup(md.convert(bleach.clean(post.content)), features="html.parser").find('p').text
-
-	template = loader.get_template('blog/index.html')
 	context = {'posts': page_posts, 'categories': categories, 'category': category}
 	return HttpResponse(template.render(context, request))
 
 def author_index(request, author_first_name, author_last_name):
-	md = markdown.Markdown(extensions=['markdown.extensions.fenced_code', 'markdown.extensions.tables', 'extra'])
 	posts = Post.objects.filter(status=1, author__first_name__contains=author_first_name, author__last_name__contains=author_last_name)
-
 	paginator = Paginator(posts, 8)
 	page_number = request.GET.get('page', 1)
 	page_posts = paginator.get_page(page_number)
-
 	categories = PostCategory.objects.all()
-
-	for post in page_posts:
-		post.content_short = BeautifulSoup(md.convert(bleach.clean(post.content)), features="html.parser").find('p').text
-
 	template = loader.get_template('blog/index.html')
 	context = {'posts': page_posts, 'categories': categories, 'category': 'All'}
 	return HttpResponse(template.render(context, request))
@@ -108,7 +111,7 @@ def post_image_upload(request):
 	image = request.FILES.get('image')
 	post_image = Image(user=User.objects.get(id=request.POST.get('user', '')), original_name=image.name, image=image)
 	post_image.save()
-	data = json.dumps({'image_url': post_image.image.url})
+	data = json.dumps({'image': {'url': post_image.image.url, 'id': post_image.id}})
 	return HttpResponse(data, content_type='application/json')
 
 def delete_post(request, Id):

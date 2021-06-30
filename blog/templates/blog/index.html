@@ -1,51 +1,36 @@
 <!DOCTYPE html>
 <html>
 
-  {% include "blog/index-head.html" %}
+  {% include "blog/default-head.html" %}
 
   <body>
-
   {% include "blog/top-navbar.html" %}
-
-  <div class="search-container">
-    <form action="{% url 'blog:blog-index' %}">
-      <input type="text" placeholder="Search Posts" id="filter_posts" name="q"/>
-      <button type="submit"><i class="fa fa-search"></i></button>
-    </form>
-  </div>
-
-  <div class="select" tabindex="1">
-    <input class="selectopt" name="test" type="radio" id="opt0" checked>
-    <label for="opt0" class="option">{{ category }}</label>
-    <input class="selectopt" name="test" type="radio" id="opt1" onclick="location.href='{% url 'blog:blog-index' %}'">
-    <label for="opt1" class="option">All</label>
-    {% if categories %}
-    {% for cat in categories %}
-    <input class="selectopt" name="test" type="radio" id="opt{{ forloop.counter | add:1 }}" onclick="location.href='{% url 'blog:index-specific-cat' cat %}'">
-    <label for="opt{{ forloop.counter | add:1 }}" class="option">{{ cat }}</label>
-    {% endfor %}
-    {% endif %}
-  </div>
-
-  <div id="posts">
+  <div class="card-columns">
   {% if posts %}
   {% for post in posts %}
-    <div class="card" onclick="location.href='{% url 'blog:post-detail' post.slug %}'">
-        {% if post.title_image %}
-          <img class="post-image" src="{{ post.title_image.url }}"/>
-        {% else %}
-          <div class="post-image" style="background-color: CadetBlue;"></div>
-        {% endif %}
-        <div class="author">
-          <img src="{{ post.author.userprofile.avatar.url }}" alt="" class="author-image">
-          <a class="author-name" href="{% url 'blog:specific-author' post.author.first_name post.author.last_name %}">{{ post.author.first_name }} {{ post.author.last_name }}</a>
-          <span class="date">, {{ post.updated_on }}</span>
-        </div>
-        <div class="post-title">
-          <h1>{{ post.title }}</h1>
-        </div>
-        <div class="post-text">{{ post.content_short }}</div>
+    <div class="card">
+      {% if post.title_image %}
+      <img class="card-img-top" src="{{ post.title_image.image.url }}"/>
+      {% else %}
+      <div class="card-img-top" style="background-color: CadetBlue;"></div>
+      {% endif %}
+      <div class="card-img-overlay">
+        <a href="{% url 'blog:index-specific-cat' post.category %}" class="btn btn-light btn-sm">{{ post.category }}</a>
+      </div>
+      <div class="author">
+        <img src="{{ post.author.userprofile.avatar.url }}" alt="" class="author-image">
+        <a class="author-name" href="{% url 'blog:specific-author' post.author.first_name post.author.last_name %}">{{ post.author.first_name }}</a>
+      </div>
+      <div class="card-body">
+        <h4 class="card-title">{{ post.title }}</h4>
+        <p class="card-text">{{ post.first_paragraph | slice:"0:250" }} [...]</p>
+        <a href="{% url 'blog:post-detail' post.slug %}" class="btn btn-primary">Read More</a>
+      </div>
+      <div class="card-footer text-muted d-flex justify-content-between bg-transparent border-top-0">
+        <div class="views">{{ post.updated_on }}</div>
+      </div>
     </div>
+
   {% endfor %}
   {% else %}
       <p>No posts are available.</p>

@@ -41,13 +41,16 @@ body {
     flex-direction: row;
 }
 
+.navbar {
+  margin-bottom: 0;
+}
+
 /* page header */
 header {
     height: 40vh;
     background-size: cover;
     background-position: top;
     align-items: center;
-    margin-top: 46px;
 }
 
 
@@ -67,10 +70,10 @@ header {
     border-radius: 100%;
     border: 1px solid white;
     height: 15vh;
+    max-width: 90px;
 }
 
 #user-text p {
-    margin-top: -5px;
     text-align: center;
     font-family: 'Source Sans Pro', sans-serif;
     font-size: 14px;
@@ -97,6 +100,10 @@ header {
 
 #content h1, h2, h3, h4, h5, h6 {
   color: CadetBlue;
+}
+
+#toc-nav {
+  width: 30%;
 }
 
 
@@ -148,34 +155,6 @@ header {
 
 .toc-marker path {
   transition: all 0.3s ease;
-}
-
-
-/* The navigation bar */
-.navbar {
-  overflow: hidden;
-  background-color: rgb(51, 51, 51);
-  position: fixed; /* Set the navbar to fixed position */
-  top: 0; /* Position the navbar at the top of the page */
-  width: 100%; /* Full width */
-  z-index: 1;
-  height: 46px;
-}
-
-/* Links inside the navbar */
-.navbar a {
-  float: left;
-  display: block;
-  color: #f2f2f2;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-}
-
-/* Change background on mouse-over */
-.navbar a:hover {
-  background: #ddd;
-  color: black;
 }
 
 #content img {
