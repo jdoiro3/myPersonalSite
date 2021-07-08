@@ -57,7 +57,7 @@ class Post(models.Model):
 
 	title = models.CharField(max_length=200, unique=True)
 	title_color = models.IntegerField(choices=TITLE_COLORS, default=0)
-	category = models.ForeignKey(PostCategory, on_delete=models.CASCADE, related_name='posts', blank=True, null=True)
+	category = models.ForeignKey(PostCategory, on_delete=models.SET_NULL, related_name='posts', blank=True, null=True)
 	slug = models.SlugField(default='', editable=False)
 	author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blog_posts')
 	created_on = models.DateField(auto_now_add=True)
@@ -83,6 +83,7 @@ class Post(models.Model):
 		doc = Document(self.pk, self.content, self.title, self.author.first_name, self.author.last_name)
 		index = apps.get_app_config('blog').index
 		index.remove(doc)
+		index.save()
 		# delete from database
 		super().delete(*args, **kwargs)
 
