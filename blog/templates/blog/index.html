@@ -12,7 +12,7 @@
       {% if post.title_image %}
       <img class="card-img-top" src="{{ post.title_image.image.url }}"/>
       {% else %}
-      <div class="card-img-top" style="background-color: CadetBlue;"></div>
+      <div class="card-img-top" style="background-color: rgb(24, 37, 52);"></div>
       {% endif %}
       <div class="card-img-overlay">
         <a href="{% url 'blog:index-specific-cat' post.category %}" class="btn btn-light btn-sm">{{ post.category }}</a>

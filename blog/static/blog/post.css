@@ -7,6 +7,7 @@ html {
 
 body {
   background-color: rgb(239, 239, 239);
+  font-family: 'Roboto', sans-serif;
 }
 
 #edit-container {
@@ -43,11 +44,12 @@ body {
 
 .navbar {
   margin-bottom: 0;
+  border-bottom: solid white 1px;
 }
 
 /* page header */
 header {
-    height: 40vh;
+    height: 60vh;
     background-size: cover;
     background-position: top;
     align-items: center;
@@ -55,11 +57,10 @@ header {
 
 
 #title {
-    font-family: 'Roboto', sans-serif;
     font-size: 50px;
     font-weight: normal;
     text-align: center;
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(30px);
 }
 
 #user-image {
@@ -75,21 +76,17 @@ header {
 
 #user-text p {
     text-align: center;
-    font-family: 'Source Sans Pro', sans-serif;
     font-size: 14px;
     color: rgb(51, 51, 51);
-    border-bottom: 2px solid CadetBlue;
+    border-bottom: 2px solid rgb(24, 37, 52);;
     padding-bottom: 10px;
     border-bottom-width: 2px;
 }
 
 #content {
-    padding-left: 5%;
-    padding-right: 5%;
-    margin: 10px;
-    margin-right: 10%;
+    padding: 2%;
+    margin: 10px 10% 10px 10%;
     box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-    font-family: "Open Sans", sans-serif;
     font-size: 16px;
     color: #15202b;
     width: 100vw;
@@ -99,7 +96,10 @@ header {
 }
 
 #content h1, h2, h3, h4, h5, h6 {
-  color: CadetBlue;
+  color: rgb(24, 37, 52);
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 35px;
 }
 
 #toc-nav {
@@ -108,7 +108,6 @@ header {
 
 
 .toc {
-  font-family: 'Roboto', sans-serif;
   position: sticky;
   left: 3em;
   top: 5em;
@@ -162,6 +161,9 @@ header {
   max-height: 1000px;
   height: auto;
   width: auto;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 
@@ -173,7 +175,7 @@ header {
   font-style:italic;
   color: #555555;
   padding:1.2em 30px 1.2em 75px;
-  border-left:8px solid #78C0A8 ;
+  border-left:8px solid rgb(24, 37, 52);
   line-height:1.6;
   position: relative;
   background:#EDEDED;
@@ -183,7 +185,7 @@ header {
 #content blockquote::before {
   font-family: Arial;
   content: "\201C";
-  color: CadetBlue;
+  color: rgb(24, 37, 52);
   font-size:4em;
   position: absolute;
   left: 10px;
@@ -196,10 +198,14 @@ header {
 
 #content blockquote span {
   display:block;
-  color: CadetBlue;
+  color: rgb(24, 37, 52);
   font-style: normal;
   font-weight: bold;
   margin-top:1em;
+}
+
+#edit i {
+  color:#343a40;
 }
 
 @media only screen and (max-width: 600px) {
@@ -207,26 +213,25 @@ header {
     display: none;
   }
 
+  #toc-nav {
+    display: none;
+  }
+
   #title {
     font-size: 25px;
+    width: 80vw;
   }
 
   #user-image img {
     height: 10vh;
   }
 
-  #content {
-    margin-right: auto;
-    margin: 1vw;
-    width: 80vw;
-    font-size: 50%;
-  }
-
-  .flex-container-content {
-    justify-content: center;
-  }
-
   #edit-container {
-    margin-right: auto;
+    margin-right: 5px;
   }
+
+  #content {
+    margin: 5px;
+  }
+
 }

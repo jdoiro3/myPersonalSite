@@ -5,6 +5,7 @@ bs4==0.0.1
 click==8.0.1
 colorama==0.4.4
 Django==3.2.4
+django-cleanup==5.2.0
 joblib==1.0.1
 Markdown==3.3.4
 nltk==3.6.2

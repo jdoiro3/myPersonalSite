@@ -28,6 +28,7 @@
 
 .toolbar-item i {
   font-size:24px;
+  color: #343a40;
 }
 
 #status, #user, #category {
@@ -40,22 +41,14 @@
     font-size: 50px;
     font-weight: normal;
     text-align: center;
-    background-color: rgb(32,32,32);
+    background-color: #343a40;
     color: white;
     font-family: Consolas;
+    border: none;
 }
 
 #content {
     overflow-y: scroll;
-    padding-left: 5%;
-    padding-right: 5%;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-    font-family: "Open Sans", sans-serif;
-    font-size: 16px;
-    color: #15202b;
-    line-height: 1.625;
-    background-color: white;
-    word-wrap: break-word;
     height: 100%;
     margin: 0px;
 }
@@ -63,10 +56,10 @@
 #markdown-editor {
     resize: none;
     overflow-y: scroll;
-    width: 100%;
+    width: 50vw;
     height: 100%; 
     resize: horizontal;
-    background-color: rgb(32,32,32);
+    background-color: #343a40;
     color: white;
     border:none;
     font-family: Consolas;
@@ -81,6 +74,7 @@ textarea {
   margin-right: 10px;
   height: 100%;
   box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  width: fit-content;
 }
 
 #edit-toolbar {
@@ -110,7 +104,7 @@ textarea {
 
 /* Set a style for the submit/login button */
 .form-container .btn {
-  background-color: #04AA6D;
+  background-color: #343a40;
   color: white;
   padding: 16px 20px;
   border: none;
@@ -120,9 +114,8 @@ textarea {
   opacity: 0.8;
 }
 
-/* Add a red background color to the cancel button */
-.form-container .cancel {
-  background-color: black;
+.form-container .add {
+  margin-top: 10px;
 }
 
 /* Add some hover effects to buttons */
@@ -133,4 +126,12 @@ textarea {
 .form-container textarea {
   width: 100%;
   resize: none;
+}
+
+
+@media only screen and (max-width: 600px) {
+  .flex-container-content {
+    justify-content: center;
+    flex-direction: column;
+  }
 }

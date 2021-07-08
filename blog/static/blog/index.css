@@ -20,15 +20,19 @@ body::-webkit-scrollbar {
   z-index: 100;
 }
 
+.bg-dark {
+  background-color: rgb(24, 37, 52)!important;
+}
+
 .card-img-overlay {
-  z-index: -1;
+  height: fit-content;
 }
 
 .card-img-top {
   border-bottom-left-radius: 0px;
   border-bottom-right-radius: 0px;
   width: 100%;
-  height: 35vh;
+  height: 30vh;
   object-fit: cover;
 }
 
@@ -69,15 +73,16 @@ body::-webkit-scrollbar {
 .author {
   display: flex;
   align-items: flex-end;
-  margin-top: -40px;
+  margin-top: -30px;
   background: transparent;
 }
 
-.author-image{
-  width: 70px;
-  height: 70px;
+.author-image {
+  width: 60px;
+  height: 60px;
   border-radius: 100%;
   margin-left: 10px;
+  border: 1px solid white;
 }
 
 .author-name {

@@ -47,8 +47,8 @@
   <button class="toolbar-item" onclick="openForm('quote-form')" title="add quote to post"><i class="fas fa-quote-left"></i></button>
   <!-- selector for the post's status -->
   <select name="status" id="status" class="toolbar-item" form="save-changes">
-    <option value="1">Publish</option>
-    <option value="0">Draft</option>
+    <option value="0" {% if post.status == None or post.status == 0 %}selected="selected"{% endif %}>Draft</option>
+    <option value="1" {% if post.status == 1 %}selected="selected"{% endif %}>Publish</option>
   </select>
   <!-- selector for the post's category -->
   <select name="category" id="category" class="toolbar-item" form="save-changes" required>
@@ -87,7 +87,7 @@
     <input type="text" placeholder="Citation text" name="citation" id="citation">
     <input type="url" placeholder="Citation url" name="citation-url" id="citation-url">
     <output name="result" id="result" for="a b"></output>
-    <button type="button" class="btn cancel" onclick="addQuote()">Add</button>
+    <button type="button" class="btn add" onclick="addQuote()">Add</button>
     <button type="button" class="btn cancel" onclick="closeForm('quote-form')">Close</button>
   </form>
 </div>

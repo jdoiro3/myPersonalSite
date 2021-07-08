@@ -60,7 +60,9 @@ class InvertedIndex:
                 with open(self.index_json, "r") as f:
                     self.index = json.load(f)
             else:
-                self.index = dict()
+                raise IOError("no file exists")
+        else:
+            self.index = dict()
     
     def add(self, document):
         tokens = document.getTokens(self.parser)

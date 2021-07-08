@@ -21,7 +21,7 @@
 
     {% include "blog/top-navbar.html" %}
 
-    <header id="post-header" class="flex-container" style={% if post.title_image %}"background-image: url({{ post.title_image.image.url }});" {% else %}"background-color: CadetBlue;"{% endif %}>
+    <header id="post-header" class="flex-container" style={% if post.title_image %}"background-image: url({{ post.title_image.image.url }});" {% else %}"background-color: rgb(24, 37, 52);"{% endif %}>
       {% block post_title %}
       <h1 id="title" style="color: {{ post.get_title_color_display }};"> {{ post.title }} </h1>
       {% endblock %}
@@ -53,10 +53,8 @@
       <nav id="toc-nav">
           {{ toc | safe }}
       </nav>
-      <div id="content">
-      {% else %}
-      <div id="content" style="margin-left: 10%;"> 
       {% endif %}
+      <div id="content">
           {{ post.content | safe }} 
       </div>
     </div>

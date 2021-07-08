@@ -40,7 +40,8 @@ def post_detail(request, slug):
 				title = request.POST.get('title', ''), 
 				author = User.objects.get(id=request.POST.get('user')), 
 				status = request.POST.get('status'),
-				title_image = image
+				title_image = image,
+				category = PostCategory.objects.get(id=request.POST.get('category'))
 				)
 		post.save()
 	
@@ -70,7 +71,7 @@ def index(request, category='All'):
 	else:
 		posts = Post.objects.filter(status=1, category__categories__contains=category)
 
-	paginator = Paginator(posts, 8)
+	paginator = Paginator(posts, 6)
 	page_number = request.GET.get('page', 1)
 	page_posts = paginator.get_page(page_number)
 	categories = PostCategory.objects.all()
