@@ -60,7 +60,7 @@ header {
     font-size: 50px;
     font-weight: normal;
     text-align: center;
-    backdrop-filter: blur(30px);
+    color: black;
 }
 
 #user-image {
@@ -87,7 +87,7 @@ header {
     padding: 2%;
     margin: 10px 10% 10px 10%;
     box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-    font-size: 16px;
+    font-size: 20px;
     color: #15202b;
     width: 100vw;
     line-height: 1.625;
