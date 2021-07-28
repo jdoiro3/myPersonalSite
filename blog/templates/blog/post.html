@@ -22,38 +22,32 @@
     {% include "blog/top-navbar.html" %}
 
     <header id="post-header" class="flex-container" style={% if post.title_image %}"background-image: url({{ post.title_image.image.url }});" {% else %}"background-color: rgb(24, 37, 52);"{% endif %}>
-      {% block post_title %}
-      <h1 id="title" style="color: {{ post.get_title_color_display }};"> {{ post.title }} </h1>
-      {% endblock %}
+    {% block header %}{% endblock %}
     </header>
 
-    <div id="user-container" class="flex-container">
-      <div id="user-image">
-        <img src="{{ user_profile.avatar.url }}">
-      </div>
-      <div id="user-text">
-        <p>
+    <div class="flex-container-content">
+      <div>
+        {% block post_title %}<h1 id="title"> {{ post.title }}</h1>{% endblock %}
+        <div id="user-container" class="flex-container">
+          <div id="user-image">
+            <img src="{{ user_profile.avatar.url }}">
+          </div>
+          <div id="user-text">
+          <p>
             <strong> {{ post.author.first_name }} </strong><br>
             <em>Last Updated {{ post.updated_on }}</em>
-        </p>
-      </div>
-      {% block user_select %}
-      {% endblock %}
-    </div>
-
-    {% block post_content %}
-    {% if request.user == post.author %}
-      <div id="edit-container">
-        <button id="edit" onclick="location.href='{% url 'blog:post-edit' post.id %}'" type="button"><i class="fa fa-edit"></i></button>
-      </div>
-    {% endif %}
-
-    <div class="flex-container-content">
-      {% if toc %}
-      <nav id="toc-nav">
-          {{ toc | safe }}
-      </nav>
+          </p>
+          </div>
+            {% block user_select %}
+            {% endblock %}
+        </div>
+      {% block post_content %}
+      {% if request.user == post.author %}
+        <div id="edit-container">
+          <button id="edit" onclick="location.href='{% url 'blog:post-edit' post.id %}'" type="button"><i class="fa fa-edit"></i></button>
+        </div>
       {% endif %}
+      </div>
       <div id="content">
           {{ post.content | safe }} 
       </div>

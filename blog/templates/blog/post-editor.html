@@ -8,6 +8,14 @@
 <script src="{% static 'blog/post-editor.js' %}" defer></script>
 {% endblock %}
 
+{% block header %}
+<!-- add a header image button -->
+<button id="add-header-image" class="toolbar-item" type="button" title="add header image"><i class="fas fa-image"></i></button>
+<input style="display: none;" id="add-header-image-input" type="file" accept="image/*" name="header-image" onchange="uploadImage('{% url 'blog:add-image' %}', '{{ request.user.id }}', this, addImageHeader)">
+<!-- this stores the header's image id when a new image is uploaded via the fetch API -->
+<input style="display: none;" id="header-image-id" type="number" form="save-changes" name="header-image-id" {% if post.title_image is not None %}value={{ post.title_image.id }}{% else %}value="-1"{% endif %}></input>
+{% endblock %}
+
 {% block post_title %}
 <input id="title" form="save-changes" value="{{ post.title }}" name="title" oninput="updateSaveAction()" required></input>
 {% endblock %}
@@ -18,12 +26,6 @@
   <option value="{{ user.id }}">{{ user.username }}</option>
   {% endfor %}
 </select>
-
-<!-- add a header image button -->
-<button id="add-header-image" class="toolbar-item" type="button" title="add header image"><i class="fas fa-image"></i></button>
-<input style="display: none;" id="add-header-image-input" type="file" accept="image/*" name="header-image" onchange="uploadImage('{% url 'blog:add-image' %}', '{{ request.user.id }}', this, addImageHeader)">
-<!-- this stores the header's image id when a new image is uploaded via the fetch API -->
-<input style="display: none;" id="header-image-id" type="number" form="save-changes" name="header-image-id" {% if post.title_image is not None %}value={{ post.title_image.id }}{% else %}value="-1"{% endif %}></input>
 {% endblock %}
 
 {% block post_content %}

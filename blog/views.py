@@ -14,7 +14,7 @@ from .models import Post, User, PostCategory, Image
 def post_detail(request, slug):
 
 	template = loader.get_template('blog/post.html')
-	md = markdown.Markdown(extensions=['toc', 'markdown.extensions.fenced_code', 'markdown.extensions.tables', 'extra'])
+	md = markdown.Markdown(extensions=['markdown.extensions.fenced_code', 'markdown.extensions.tables', 'extra'])
 
 	if request.method == 'POST':
 		header_image_id = request.POST.get('header-image-id')
@@ -50,10 +50,7 @@ def post_detail(request, slug):
 	post.content = md.convert(post.content)
 	categories = PostCategory.objects.all()
 	user_profile = post.author.userprofile
-	if md.toc_tokens:
-		context = {'post': post, 'toc': md.toc, 'user_profile': user_profile, 'categories': categories}
-	else:
-		context = {'post': post, 'user_profile': user_profile, 'categories': categories}
+	context = {'post': post, 'user_profile': user_profile, 'categories': categories}
 	return HttpResponse(template.render(context, request))
 
 def index(request, category='All'):

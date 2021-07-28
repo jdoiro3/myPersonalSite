@@ -73,13 +73,12 @@ body::-webkit-scrollbar {
 .author {
   display: flex;
   align-items: flex-end;
-  margin-top: -30px;
+  margin-top: -35px;
   background: transparent;
 }
 
 .author-image {
-  width: 60px;
-  height: 60px;
+  max-width: 70px;
   border-radius: 100%;
   margin-left: 10px;
   border: 1px solid white;

@@ -1,20 +1,18 @@
-#add-header-image {
-  position: absolute;
-  top: 0;
-  right: 0;
+#add-header-image i {
+  color: white;
 }
 
 #user-container {
-  position: relative;
+  margin-left: 10px;
+  margin: 10px;
 }
 
 .flex-container-content {
     display: flex;
     flex-direction: row;
     height: 80vh;
-    margin-bottom: 10px;
-    margin-left: 10px;
-    margin-right: 10px;
+    width: 95vw;
+    margin: 10px;
 }
 
 .toolbar-item {
@@ -38,19 +36,21 @@
 }
 
 #title {
-    font-size: 50px;
-    font-weight: normal;
-    text-align: center;
-    background-color: #343a40;
-    color: white;
-    font-family: Consolas;
-    border: none;
+  margin-left: 10px;
+  font-size: 50px;
+  font-weight: normal;
+  text-align: center;
+  background-color: #343a40;
+  color: white;
+  font-family: Consolas;
+  border: none;
 }
 
 #content {
     overflow-y: scroll;
     height: 100%;
     margin: 0px;
+    width: 100%;
 }
 
 #markdown-editor {
