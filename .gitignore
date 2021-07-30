@@ -1,3 +1,5 @@
+# Text backup files
+*.bak
 *.sqlite3
 env
 media
