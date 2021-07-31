@@ -55,7 +55,7 @@ class Post(models.Model):
 		ext = filename.split('.')[1]
 		return f'{sha1_hash.hexdigest()[0:2]}/{sha1_hash.hexdigest()[2:]}.{ext}'
 
-	title = models.CharField(max_length=200, unique=True)
+	title = models.CharField(max_length=200)
 	title_color = models.IntegerField(choices=TITLE_COLORS, default=0)
 	category = models.ForeignKey(PostCategory, on_delete=models.SET_NULL, related_name='posts', blank=True, null=True)
 	slug = models.SlugField(default='', editable=False)
