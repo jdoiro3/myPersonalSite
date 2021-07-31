@@ -40,3 +40,4 @@ traitlets==5.0.5
 wcwidth==0.2.5
 webencodings==0.5.1
 whitenoise==5.3.0
+psycopg2
