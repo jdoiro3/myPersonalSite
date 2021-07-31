@@ -16,14 +16,17 @@ function getCookie(name) {
     return cookieValue;
 }
 
+// used for quote form
 function openForm(form_id) {
     document.getElementById(form_id).style.display = "block";
 }
-  
+
+// used for quote form
 function closeForm(form_id) {
     document.getElementById(form_id).style.display = "none";
 }
   
+// adds a blockquote tag to the markdown editor
 function addQuote() {
     let curPos = document.getElementById("markdown-editor").selectionStart;
     let content = $("#markdown-editor").val();
@@ -40,6 +43,7 @@ function addQuote() {
     document.getElementById('content').innerHTML = marked(markdown_elem.value);
 }
 
+// slugify the post title for the server to process
 function slugify(text)
 {
   return text.toString().toLowerCase()
@@ -112,3 +116,17 @@ function uploadImage(endpoint, user, input, dom_action_func) {
         error => console.log(error)
     );
 }
+
+// we want the Tab key to behave correctly for the textarea used for the markdown editor
+document.getElementById('markdown-editor').addEventListener('keydown', function(e) {
+    if (e.key == 'Tab') {
+      e.preventDefault();
+      var start = this.selectionStart;
+      var end = this.selectionEnd;
+      // set textarea value to: text before caret + tab + text after caret
+      this.value = this.value.substring(0, start) + "\t" + this.value.substring(end);
+      // put caret at right position again
+      this.selectionStart =
+        this.selectionEnd = start + 1;
+    }
+  });

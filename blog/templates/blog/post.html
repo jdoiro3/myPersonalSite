@@ -22,7 +22,6 @@
     {% include "blog/top-navbar.html" %}
 
     <header id="post-header" class="flex-container" style={% if post.title_image %}"background-image: url({{ post.title_image.image.url }});" {% else %}"background-color: rgb(24, 37, 52);"{% endif %}>
-    {% block header %}{% endblock %}
     </header>
 
     <div class="flex-container-content">

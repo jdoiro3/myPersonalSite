@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404
 from django.apps import apps
+from django.http import JsonResponse
 
 from .models import Post, User, PostCategory, Image
 
@@ -119,6 +120,10 @@ def delete_post(request, Id):
 	context = {'post': post}
 	return HttpResponse(template.render(context, request))
 
+
+def post_titles(request):
+	titles = list(Post.objects.values_list('title', flat=True))
+	return JsonResponse({'titles': titles})
 
 
 
