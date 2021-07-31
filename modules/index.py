@@ -1,11 +1,18 @@
+# Inverted Index implementation for blog document searching
+
+from pathlib import Path
+# add the root directory for nltk_data folder
+from nltk import data
+data.path.append(str(Path(__file__).resolve().parents[1] / "nltk_data"))
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 import json
 import re
-from pathlib import Path
 
 class Document:
+    """[summary]
+    """
     
     def __init__(self, Id, *args):
         self.Id = Id
@@ -19,6 +26,13 @@ class Document:
         
 
 class Parser:
+    """[summary]
+
+    Returns
+    -------
+    [type]
+        [description]
+    """
     
     HTML_CLEANER = re.compile('<.*?>|&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});')
     
@@ -51,6 +65,8 @@ class Parser:
         
         
 class InvertedIndex:
+    """[summary]
+    """
     
     def __init__(self, from_file=True):
         self.parser = Parser()
