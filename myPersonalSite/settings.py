@@ -37,7 +37,8 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-_*at6#rqe+1m_i
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
+#DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
+DEBUG = False
 
 ALLOWED_HOSTS = ["joseph-doiron-blog.herokuapp.com", "127.0.0.1"]
 
