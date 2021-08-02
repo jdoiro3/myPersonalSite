@@ -102,7 +102,7 @@ class InvertedIndex:
                 
     def save(self):
         if self.from_file:
-            self.client.delete_object(Bucket=self.bucket, Key='index.json')
+            #self.client.delete_object(Bucket=self.bucket, Key='index.json')
             self.client.put_object(Body=json.dumps(self.index), Bucket=self.bucket, Key="index.json")
         else:
             with open("index.json", "w") as f:
