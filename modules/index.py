@@ -9,6 +9,8 @@ from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 import json
 import re
+import boto3
+import os
 
 class Document:
     """[summary]
@@ -69,14 +71,17 @@ class InvertedIndex:
     """
     
     def __init__(self, from_file=True):
+        self.from_file = from_file
+        self.bucket = 'joseph-blog-media'
         self.parser = Parser()
-        self.index_json = Path("index.json")
         if from_file:
-            if self.index_json.is_file():
-                with open(self.index_json, "r") as f:
-                    self.index = json.load(f)
-            else:
-                raise IOError("no file exists")
+            self.client = boto3.client('s3', 
+                aws_access_key_id=os.environ.get('AWS_S3_ACCESS_KEY'), 
+                aws_secret_access_key=os.environ.get('AWS_S3_SECRET_KEY')
+                )
+            result = self.client.get_object(Bucket=self.bucket, Key="index.json")
+            json.loads(result["Body"].read().decode('utf-8'))
+            self.index = Path("index.json")
         else:
             self.index = dict()
     
@@ -96,8 +101,12 @@ class InvertedIndex:
                 doc_entries.remove(document.Id)
                 
     def save(self):
-        with open(self.index_json, "w") as f:
-            json.dump(self.index, f, indent=4)
+        if self.from_file:
+            self.client.delete_object(Bucket=self.bucket, Key='index.json')
+            self.client.put_object(Body=json.dumps(self.index), Bucket=self.bucket, Key="index.json")
+        else:
+            with open("index.json", "w") as f:
+                json.dump(self.index, f, indent=4)
 
     def search(self, search):
         search_tokens = self.parser.parse(search)
