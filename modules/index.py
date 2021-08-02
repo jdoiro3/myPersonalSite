@@ -80,8 +80,7 @@ class InvertedIndex:
                 aws_secret_access_key=os.environ.get('AWS_S3_SECRET_KEY')
                 )
             result = self.client.get_object(Bucket=self.bucket, Key="index.json")
-            json.loads(result["Body"].read().decode('utf-8'))
-            self.index = Path("index.json")
+            self.index = json.loads(result["Body"].read().decode('utf-8'))
         else:
             self.index = dict()
     
