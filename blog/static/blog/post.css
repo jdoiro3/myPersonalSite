@@ -51,7 +51,7 @@ body {
 header {
     height: 60vh;
     background-size: cover;
-    background-position: top;
+    background-position: center;
     align-items: center;
 }
 
