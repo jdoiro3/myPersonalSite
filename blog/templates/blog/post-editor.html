@@ -22,7 +22,7 @@
 {% block user_select %}
 <select name="user" id="user" form="save-changes">
   {% for user in users %}
-  <option value="{{ user.id }}">{{ user.username }}</option>
+  <option value="{{ user.id }}" {% if post.author == user %}selected="selected"{% endif %}>{{ user.username }}</option>
   {% endfor %}
 </select>
 {% endblock %}
@@ -53,15 +53,9 @@
   </select>
   <!-- selector for the post's category -->
   <select name="category" id="category" class="toolbar-item" form="save-changes" required>
-    {% if post.category == None %}
-    <option label=" " style="display: none;" selected="selected"></option>
-    {% endif %}
+    {% if post.category == None %}<option label=" " style="display: none;" selected="selected"></option>{% endif %}
     {% for cat in categories %}
-    {% if post.category == cat %}
-    <option value="{{ cat.id }}" selected="selected">{{ cat }}</option>
-    {% else %}
-    <option value="{{ cat.id }}">{{ cat }}</option>
-    {% endif %}
+    <option value="{{ cat.id }}" {% if post.category == cat %}selected="selected"{% endif %}>{{ cat }}</option>
     {% endfor %}
   </select>
 </div>

@@ -3,44 +3,66 @@ import os
 # Heroku: Update database configuration from $DATABASE_URL.
 import dj_database_url
 
-# for AWS S3 bucket
-AWS_ACCESS_KEY_ID = os.environ.get('AWS_S3_ACCESS_KEY')
-AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_S3_SECRET_KEY')
-AWS_STORAGE_BUCKET_NAME = 'joseph-blog-media'
-AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
-
-AWS_S3_OBJECT_PARAMETERS = {
-    'CacheControl': 'max-age=86400',
-}
-
-AWS_LOCATION = 'static'
-MEDIA_URL = "https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/"
-DEFAULT_FILE_STORAGE = 'myPersonalSite.storage_backends.MediaStorage'
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-# The absolute path to the directory where collectstatic will collect static files for deployment.
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-# The URL to use when referring to static files (where they will be served from)
-STATIC_URL = '/static/'
-# Simplified static file serving.
-# https://warehouse.python.org/project/whitenoise/
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-_*at6#rqe+1m_i=rithv7%llxcw-1f0lgw_(9#ocb9+@+81osz')
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
+
 # SECURITY WARNING: don't run with debug turned on in production!
 #DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
-DEBUG = False
+DEBUG = True
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 ALLOWED_HOSTS = ["joseph-doiron-blog.herokuapp.com", "127.0.0.1"]
+
+# Database
+# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+
+if not DEBUG:
+
+    db_from_env = dj_database_url.config(conn_max_age=500)
+    DATABASES['default'].update(db_from_env)
+
+    # AWS configuration
+    # ------------------------------------------------------------------------
+
+    # for AWS S3 bucket
+    AWS_ACCESS_KEY_ID = os.environ.get('AWS_S3_ACCESS_KEY')
+    AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_S3_SECRET_KEY')
+    AWS_STORAGE_BUCKET_NAME = 'joseph-blog-media'
+    AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
+    AWS_S3_OBJECT_PARAMETERS = {
+        'CacheControl': 'max-age=86400',
+    }
+
+    AWS_LOCATION = 'static'
+    MEDIA_URL = "https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/"
+    DEFAULT_FILE_STORAGE = 'myPersonalSite.storage_backends.MediaStorage'
+
+    # The absolute path to the directory where collectstatic will collect static files for deployment.
+    STATIC_ROOT = BASE_DIR / 'staticfiles'
+    # The URL to use when referring to static files (where they will be served from)
+    STATIC_URL = '/static/'
+    # Simplified static file serving.
+    # https://warehouse.python.org/project/whitenoise/
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+else:
+    # development env configs
+    STATIC_URL = '/static/'
+    DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+    MEDIA_ROOT = BASE_DIR / 'media'
+    MEDIA_URL = '/media/'
+    AUTH_PROFILE_MODULE = 'blog.UserProfile'
 
 
 # Application definition
@@ -87,20 +109,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'myPersonalSite.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
-db_from_env = dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(db_from_env)
 
 
 # Password validation

@@ -79,9 +79,10 @@ body::-webkit-scrollbar {
 
 .author-image {
   max-width: 70px;
-  border-radius: 100%;
   margin-left: 10px;
   border: 1px solid white;
+  object-fit: cover;
+  border-radius:50%;
 }
 
 .author-name {

@@ -72,10 +72,11 @@ header {
 }
 
 #user-image img {
-    border-radius: 100%;
     border: 1px solid white;
     max-width: 70px;
     margin-right: 10px;
+    object-fit: cover;
+    border-radius:50%;
 }
 
 #user-text p {
