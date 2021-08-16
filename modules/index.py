@@ -70,17 +70,27 @@ class InvertedIndex:
     """[summary]
     """
     
-    def __init__(self, from_file=True):
+    def __init__(self, from_file=True, in_s3=False):
         self.from_file = from_file
+        self.in_s3 = in_s3
         self.bucket = 'joseph-blog-media'
         self.parser = Parser()
-        if from_file:
+        if from_file and in_s3:
             self.client = boto3.client('s3', 
                 aws_access_key_id=os.environ.get('AWS_S3_ACCESS_KEY'), 
                 aws_secret_access_key=os.environ.get('AWS_S3_SECRET_KEY')
                 )
             result = self.client.get_object(Bucket=self.bucket, Key="index.json")
             self.index = json.loads(result["Body"].read().decode('utf-8'))
+        elif from_file:
+            index_file = Path("index.json")
+            if index_file.is_file():
+                mode = "r"
+            # see https://docs.python.org/3/library/functions.html#open for more details
+            else:
+                mode = "w+"
+            with open(index_file, mode) as f:
+                self.index = json.load(f)
         else:
             self.index = dict()
     
@@ -100,9 +110,9 @@ class InvertedIndex:
                 doc_entries.remove(document.Id)
                 
     def save(self):
-        if self.from_file:
+        if self.from_file and self.in_s3:
             #self.client.delete_object(Bucket=self.bucket, Key='index.json')
-            self.client.put_object(Body=json.dumps(self.index), Bucket=self.bucket, Key="index.json")
+            self.client.put_object(Body=json.dumps(self.index, indent=4), Bucket=self.bucket, Key="index.json")
         else:
             with open("index.json", "w") as f:
                 json.dump(self.index, f, indent=4)
