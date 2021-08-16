@@ -48,6 +48,9 @@ class Image(models.Model):
 
 class Post(models.Model):
 
+	class Meta:
+		ordering = ['-created_on']
+
 	def image_dir(self, filename):
 		image = self.title_image.open()
 		content = image.read()
