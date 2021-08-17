@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html prefix="og: https://ogp.me/ns#">
 
   {% include "blog/default-head.html" %}
 
@@ -15,7 +15,7 @@
       <meta property="og:site_name" content="Blog">
       <meta property="og:type" content="website" />
       <meta property="og:title" content="{{ post.title }}" />
-      <meta name="image" property="og:image" content="https://cdn.confluent.io/wp-content/uploads/seo-logo-meadow.png" />
+      <meta name="image" property="og:image" content="{{ post.title_image.image.url }}" />
       <meta name="description" property="og:description" content="{{ post.first_paragraph|truncatechars:50 }}" />
       <meta name="author" content="{{ post.author.first_name }}" />
       {% block post_styling %}{% endblock %}
