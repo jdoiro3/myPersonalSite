@@ -1,9 +1,5 @@
-<!DOCTYPE html>
-<html>
+{% extends "blog/base.html" %}
 
-{% include "blog/default-head.html" %}
-{% include "blog/top-navbar.html" %}
-
+{% block body %}
 <p style="margin-top: 50px;">"{{ post.title }}" was successfully deleted.</p>
-
-</html>
+{% endblock %}

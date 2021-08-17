@@ -1,10 +1,6 @@
-<!DOCTYPE html>
-<html>
+{% extends "blog/base.html" %}
 
-  {% include "blog/default-head.html" %}
-
-  <body>
-  {% include "blog/top-navbar.html" %}
+{% block body %}
   <div class="card-columns">
   {% if posts %}
   {% for post in posts %}
@@ -52,6 +48,4 @@
       {% endif %}
     </ul>
   </div>
-
-</body>
-</html>
+{% endblock %}

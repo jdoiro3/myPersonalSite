@@ -1,13 +1,27 @@
 <!DOCTYPE html>
 <html>
 
-  {% include "blog/default-head.html" %}
+  {% extends "blog/base.html" %}
 
-  {% block title %}<title>{{ post.title }}</title>{% endblock %}
+  {% block head %}
+  {% load static %}
+  <!-- meta tags for post sharing -->
+  <meta prefix="og: http://ogp.me/ns#" name="image" property="og:image" content="{{ post.title_image.image.url }}" />
+  <meta prefix="og: http://ogp.me/ns#" property="og:type" content="website" />
+  <meta prefix="og: http://ogp.me/ns#" property="og:title" content="{{ post.title }}" />
+  <meta prefix="og: http://ogp.me/ns#" name="description" property="og:description" content="{{ post.first_paragraph|truncatechars:150 }}" />
+  <meta prefix="og: http://ogp.me/ns#" name="author" content="{{ post.author.first_name }}" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/styles/default.min.css">
+  <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+  <link rel="stylesheet" type="text/css" href="{% static 'blog/post.css' %}">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  {% endblock %}
+  {% block title %}
+  <title>{{ post.title }}</title>
+  {% endblock %}
 
-  <body>
-
-    {% include "blog/top-navbar.html" %}
+  {% block body %}
 
     <header id="post-header" class="flex-container" style={% if post.title_image %}"background-image: url({{ post.title_image.image.url }});" {% else %}"background-color: rgb(24, 37, 52);"{% endif %}>
     </header>
@@ -43,6 +57,5 @@
 
     {% block additions %}
     {% endblock %}
-
-  </body>
-</html>
+  
+  {% endblock %}
