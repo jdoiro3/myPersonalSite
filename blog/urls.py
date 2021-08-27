@@ -12,5 +12,4 @@ urlpatterns = [
     path('edit/<str:Id>/', views.post_editor, name='post-edit'),
     path('delete/<str:Id>/', views.delete_post, name='delete-post'),
     path('image/upload', views.post_image_upload, name='add-image'),
-    path('data/post-titles', views.post_titles, name='post-titles')
 ]

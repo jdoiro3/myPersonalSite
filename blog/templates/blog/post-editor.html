@@ -35,7 +35,7 @@
 {% block post_content %}
 <div id="edit-toolbar">
   <!-- save changes form -->
-  <form id="save-changes" onsubmit="await validateForm('{% url 'blog:post-titles' %}')" action="{% url 'blog:post-detail' post.slug %}" method="post">
+  <form id="save-changes" action="{% url 'blog:post-detail' post.slug %}" method="post">
     {% csrf_token %}
     <input type="hidden" {% if post.id %}value="{{ post.id }}"{% else %}value="-1"{% endif %} name="post-id" id="post-id">
     <button id="save" class="toolbar-item" type="submit" title="save changes"><i class="fas fa-share-square"></i></button>

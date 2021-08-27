@@ -12,11 +12,6 @@ STATUS = (
 	(1, "Published")
 	)
 
-TITLE_COLORS = (
-	(0, "white"),
-	(1, "black")
-	)
-
 class PostCategory(models.Model):
 	categories = models.CharField(max_length=20)
 
@@ -36,6 +31,7 @@ class Image(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_images')
 	original_name = models.CharField(max_length=200)
 	image = models.ImageField(upload_to=image_dir)
+	post = models.ForeignKey('Post', on_delete=models.CASCADE, related_name='post_images', blank=True, null=True)
 
 	@property
 	def image_preview(self):
@@ -59,7 +55,6 @@ class Post(models.Model):
 		return f'{sha1_hash.hexdigest()[0:2]}/{sha1_hash.hexdigest()[2:]}.{ext}'
 
 	title = models.CharField(max_length=200)
-	title_color = models.IntegerField(choices=TITLE_COLORS, default=0)
 	category = models.ForeignKey(PostCategory, on_delete=models.SET_NULL, related_name='posts', blank=True, null=True)
 	slug = models.SlugField(default='', editable=False)
 	author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blog_posts')

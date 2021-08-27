@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404
 from django.apps import apps
-from django.http import JsonResponse
+
 
 from .models import Post, User, PostCategory, Image
 
@@ -45,6 +45,10 @@ def post_detail(request, slug):
 				category = PostCategory.objects.get(id=request.POST.get('category'))
 				)
 		post.save()
+		images = Image.objects.filter(post__isnull=True)
+		for img in images:
+			img.post = post
+			img.save()
 	
 	post = get_object_or_404(Post, slug=slug)
 	# convert markdown to html server-side
@@ -93,7 +97,6 @@ def _get_edit_context(post):
 	user_profile = post.author.userprofile
 	return {'post': post, 'user_profile': user_profile, 'users': users, 'categories': categories}
 
-
 def post_editor(request, Id):
 	template = loader.get_template('blog/post-editor.html')
 	post = get_object_or_404(Post, id=Id)
@@ -108,7 +111,8 @@ def new_post(request):
 
 def post_image_upload(request):
 	image = request.FILES.get('image')
-	post_image = Image(user=User.objects.get(id=request.POST.get('user', '')), original_name=image.name, image=image)
+	user = User.objects.get(id=request.POST.get('user', ''))
+	post_image = Image(user=user, original_name=image.name, image=image)
 	post_image.save()
 	data = json.dumps({'image': {'url': post_image.image.url, 'id': post_image.id}})
 	return HttpResponse(data, content_type='application/json')
@@ -119,13 +123,6 @@ def delete_post(request, Id):
 	post.delete()
 	context = {'post': post}
 	return HttpResponse(template.render(context, request))
-
-
-def post_titles(request):
-	titles = list(Post.objects.values_list('title', flat=True))
-	return JsonResponse({'titles': titles})
-
-
 
 
 
