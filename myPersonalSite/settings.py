@@ -1,5 +1,6 @@
 from pathlib import Path
 import os
+from bleach import sanitizer
 # Heroku: Update database configuration from $DATABASE_URL.
 import dj_database_url
 
@@ -144,3 +145,7 @@ USE_TZ = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_PROFILE_MODULE = 'blog.UserProfile'
+
+ALLOWED_HTML_TAGS = sanitizer.ALLOWED_TAGS + ['iframe', 'span']
+ALLOWED_HTML_ATTRS = sanitizer.ALLOWED_ATTRIBUTES
+ALLOWED_HTML_ATTRS['iframe'] = ['width', 'height', 'src', 'title', 'frameborder', 'allow', 'allowfullscreen']

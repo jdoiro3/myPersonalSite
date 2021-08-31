@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404
 from django.apps import apps
+from myPersonalSite.settings import ALLOWED_HTML_TAGS, ALLOWED_HTML_ATTRS
 
 
 from .models import Post, User, PostCategory, Image
@@ -25,7 +26,7 @@ def post_detail(request, slug):
 			image = None
 		try:
 			post = Post.objects.get(id=request.POST.get('post-id'))
-			post.content = bleach.clean(request.POST.get('markdown'), tags=['blockquote', 'span', 'a'])
+			post.content = bleach.clean(request.POST.get('markdown'), tags=ALLOWED_HTML_TAGS, attributes=ALLOWED_HTML_ATTRS)
 			post.first_paragraph = BeautifulSoup(md.convert(bleach.clean(post.content)), features="html.parser").find('p').text
 			post.title = request.POST.get('title')
 			post.author = User.objects.get(id=request.POST.get('user'))
@@ -34,7 +35,7 @@ def post_detail(request, slug):
 			header_image_id = request.POST.get('header-image-id')
 			post.title_image = image
 		except Post.DoesNotExist:
-			content = bleach.clean(request.POST.get('markdown'), tags=['blockquote', 'span', 'a'])
+			content = bleach.clean(request.POST.get('markdown'), tags=ALLOWED_HTML_TAGS, attributes=ALLOWED_HTML_ATTRS)
 			post = Post(
 				content = content, 
 				first_paragraph = BeautifulSoup(md.convert(bleach.clean(content)), features="html.parser").find('p').text,
