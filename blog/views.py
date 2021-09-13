@@ -79,8 +79,10 @@ def index(request, category='All'):
 	page_number = request.GET.get('page', 1)
 	page_posts = paginator.get_page(page_number)
 	categories = PostCategory.objects.all()
-
-	context = {'posts': page_posts, 'categories': categories, 'category': category}
+	if query:
+		context = {'posts': page_posts, 'categories': categories, 'category': category, 'query': query}
+	else:
+		context = {'posts': page_posts, 'categories': categories, 'category': category}
 	return HttpResponse(template.render(context, request))
 
 def author_index(request, author_first_name, author_last_name):

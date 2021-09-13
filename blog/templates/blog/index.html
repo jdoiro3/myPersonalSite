@@ -1,6 +1,9 @@
 {% extends "blog/base.html" %}
 
 {% block body %}
+  {% if query %}
+  <div style="margin-top: 5px;"><h4>Results for: "{{ query }}"</h4></div>
+  {% endif %}
   <div class="card-columns">
   {% if posts %}
   {% for post in posts %}
