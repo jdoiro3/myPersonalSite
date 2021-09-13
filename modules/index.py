@@ -186,9 +186,12 @@ class InvertedIndex:
         ----------
         document : Document
         """
-        for doc_entries in self.index.values():
+        for token, doc_entries in self.index.items():
             if document.Id in doc_entries:
                 doc_entries.remove(document.Id)
+                # the token has no entries
+                if not doc_entries:
+                    del self.index[token]
                 
     def save(self) -> None:
         """Saves the index back to disk.
@@ -221,3 +224,12 @@ class InvertedIndex:
             return set.intersection(*results)
         else:
             return set()
+
+    def clean_up(self):
+        """Cleans up the inverted index, deleting tokens that don't have an doc entries.
+        """
+        for token in self.index:
+            # list is empty
+            if not self.index[token]:
+                del self.index[token]
+        self.save()
