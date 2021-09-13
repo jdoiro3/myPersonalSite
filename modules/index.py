@@ -130,7 +130,7 @@ class InvertedIndex:
     """In-memory Inverted Index object.
     """
     
-    def __init__(self, from_file=True, in_s3=False):
+    def __init__(self, from_file=True, in_s3=False, file_path="index.json"):
         """In-memory Inverted Index object.
 
         Parameters
@@ -141,6 +141,7 @@ class InvertedIndex:
             If True, reads the file from S3 bucket, by default False
         """
         self.from_file = from_file
+        self.file_path = Path(file_path)
         self.in_s3 = in_s3
         self.bucket = 'joseph-blog-media'
         self.parser = Parser()
@@ -152,7 +153,7 @@ class InvertedIndex:
             result = self.client.get_object(Bucket=self.bucket, Key="index.json")
             self.index = json.loads(result["Body"].read().decode('utf-8'))
         elif from_file:
-            index_file = Path("index.json")
+            index_file = Path(file_path)
             if index_file.is_file():
                 mode = "r"
             # see https://docs.python.org/3/library/functions.html#open for more details
@@ -200,7 +201,7 @@ class InvertedIndex:
             #self.client.delete_object(Bucket=self.bucket, Key='index.json')
             self.client.put_object(Body=json.dumps(self.index, indent=4), Bucket=self.bucket, Key="index.json")
         else:
-            with open("index.json", "w") as f:
+            with open(self.file_path, "w") as f:
                 json.dump(self.index, f, indent=4)
 
     def search(self, search) -> set:
@@ -225,11 +226,14 @@ class InvertedIndex:
         else:
             return set()
 
-    def clean_up(self):
+    def cleanup(self):
         """Cleans up the inverted index, deleting tokens that don't have an doc entries.
         """
+        tokens_to_remove = []
         for token in self.index:
             # list is empty
             if not self.index[token]:
-                del self.index[token]
+                tokens_to_remove.append(token)
+        for token in tokens_to_remove:
+            del self.index[token]
         self.save()
