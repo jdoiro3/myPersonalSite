@@ -107,7 +107,7 @@ class Parser:
         """
         return [self.ps.stem(token) for token in tokens]
     
-    def parse(self, document_field: str) -> set:
+    def parse(self, document_field: str, stem=True) -> set:
         """parses a document field into tokens to be indexed.
 
         Parameters
@@ -122,7 +122,8 @@ class Parser:
         filtered = self._charFilter(document_field)
         tokens = word_tokenize(filtered)
         tokens = self._tokenFilter(tokens)
-        tokens = self._stemTokens(tokens)
+        if stem:
+            tokens = self._stemTokens(tokens)
         return set(tokens)
         
         
@@ -236,4 +237,5 @@ class InvertedIndex:
                 tokens_to_remove.append(token)
         for token in tokens_to_remove:
             del self.index[token]
+        print(f"Deleted {len(tokens_to_remove)} entries from the index.")
         self.save()

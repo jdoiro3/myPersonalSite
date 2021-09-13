@@ -66,7 +66,8 @@ def index(request, category='All'):
 	if query:
 		index = apps.get_app_config('blog').index
 		results = index.search(query)
-		posts = Post.objects.filter(status=1, id__in=tuple(results))
+		unsorted_posts = Post.objects.filter(status=1, id__in=tuple(results)).all()
+		posts = sorted(unsorted_posts, key=lambda p: p.get_relevance_score(query), reverse=True)
 	elif category == 'All':
 		posts = Post.objects.filter(status=1)
 	elif category == 'Drafts':

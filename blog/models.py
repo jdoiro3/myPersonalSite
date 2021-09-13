@@ -2,10 +2,11 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 import os
+import math
 from hashlib import sha1
 from django.utils.html import mark_safe
 from django.apps import apps
-from modules.index import Document
+from modules.index import Document, Parser
 
 STATUS = (
 	(0, "Draft"),
@@ -93,6 +94,21 @@ class Post(models.Model):
 
 	def __str__(self):
 		return self.title
+
+	def get_relevance_score(self, search):
+		score = 0
+		parser = Parser()
+		doc = Document(self.pk, self.content, self.title, self.author.first_name, self.author.last_name)
+		search_tokens = parser.parse(search, stem=False)
+		for search_token in search_tokens:
+			for field in doc.fields:
+				field = field.lower()
+				if search_token in field:
+					term_freq = math.sqrt(field.count(search_token))
+					norm = 1 / math.sqrt(len(parser.parse(field)))
+					score += term_freq * norm
+		return score
+
 	
 class UserProfile(models.Model):
 
