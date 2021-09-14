@@ -188,12 +188,15 @@ class InvertedIndex:
         ----------
         document : Document
         """
+        tokens_to_remove = []
         for token, doc_entries in self.index.items():
             if document.Id in doc_entries:
                 doc_entries.remove(document.Id)
                 # the token has no entries
                 if not doc_entries:
-                    del self.index[token]
+                    tokens_to_remove.append(token)
+        for token in tokens_to_remove:
+            del self.index[token]
                 
     def save(self) -> None:
         """Saves the index back to disk.
