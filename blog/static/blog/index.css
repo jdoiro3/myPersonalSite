@@ -1,6 +1,6 @@
 
 
-body{
+body {
   background-color: #E4E6EB;
 }
 
@@ -103,4 +103,14 @@ body::-webkit-scrollbar {
   margin-left: -5px;
   color: #3B3C3F;
   font-family: 'Roboto', sans-serif;
+}
+
+.card-body {
+  padding-bottom: 0px !important;
+}
+
+.sharing {
+  margin-top: 5%;
+  display: flex;
+  column-gap: 2px;
 }

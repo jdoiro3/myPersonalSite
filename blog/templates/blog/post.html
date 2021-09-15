@@ -42,6 +42,7 @@
             {% block user_select %}
             {% endblock %}
         </div>
+        {% include "blog/sharing.html" %}
       {% block post_content %}
       {% if request.user == post.author %}
         <div id="edit-container">

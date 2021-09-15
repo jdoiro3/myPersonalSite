@@ -24,6 +24,12 @@
         <h4 class="card-title">{{ post.title }}</h4>
         <p class="card-text">{{ post.first_paragraph | slice:"0:250" }} [...]</p>
         <a href="{% url 'blog:post-detail' post.slug %}" class="btn btn-primary">Read More</a>
+        <div class="sharing">
+          <a id="twitter" href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-url="{{request.build_absolute_uri|slice:":-1"}}{% url 'blog:post-detail' post.slug %}" data-show-count="false">Tweet</a>
+          <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+          <script src="https://platform.linkedin.com/in.js" type="text/javascript">lang: en_US</script>
+          <script type="IN/Share" data-url="{{request.build_absolute_uri|slice:":-1" }}{% url 'blog:post-detail' post.slug %}"></script>
+        </div>
       </div>
       <div class="card-footer text-muted d-flex justify-content-between bg-transparent border-top-0">
         <div class="views">{{ post.updated_on }}</div>

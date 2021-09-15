@@ -10,6 +10,16 @@ body {
   font-family: 'Roboto', sans-serif;
 }
 
+.sharing, #title, #user-container {
+  margin-left: 10%;
+}
+
+.sharing {
+  display: flex;
+  column-gap: 2px;
+  margin-top: 1%;
+}
+
 #edit-container {
   display: flex;
   justify-content: flex-end;
@@ -59,7 +69,6 @@ header {
 #title {
   font-size: 50px;
   font-weight: normal;
-  margin-left: 10%;
   margin-right: 10%;
   margin-top: 30px;
 }
@@ -67,7 +76,6 @@ header {
 #user-container {
   display: flex;
   flex-direction: row;
-  margin-left: 10%;
   justify-content: flex-start;
 }
 
