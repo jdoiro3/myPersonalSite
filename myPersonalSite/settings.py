@@ -10,7 +10,6 @@ SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 DEBUG = False
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
