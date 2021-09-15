@@ -24,6 +24,8 @@
 <input id="title" form="save-changes" value="{{ post.title }}" name="title" oninput="updateSaveAction()" required></input>
 {% endblock %}
 
+{% block sharing %}{% endblock %}
+
 {% block user_select %}
 <select name="user" id="user" form="save-changes">
   {% for user in users %}

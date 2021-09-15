@@ -42,12 +42,14 @@
             {% block user_select %}
             {% endblock %}
         </div>
+        {% block sharing %}
         <div class="sharing">
           <a id="twitter" href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-url="{{ request.build_absolute_uri }}" data-show-count="false">Tweet</a>
           <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
           <script src="https://platform.linkedin.com/in.js" type="text/javascript">lang: en_US</script>
           <script type="IN/Share" data-url="{{ request.build_absolute_uri }}"></script>
         </div>
+        {% endblock %}
       {% block post_content %}
       {% if request.user == post.author %}
         <div id="edit-container">
