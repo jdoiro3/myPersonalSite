@@ -8,10 +8,6 @@ body::-webkit-scrollbar {
   display: none;
 }
 
-.card-columns {
-  margin: 5vw;
-}
-
 .card {
   min-height: 30%;
 }
@@ -113,4 +109,52 @@ body::-webkit-scrollbar {
   margin-top: 5%;
   display: flex;
   column-gap: 2px;
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cards__item {
+  padding: 1rem;
+  min-height: 33%;
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+  .cards__item {
+    width: 100vw;
+  }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+  .cards__item {
+    width: 90vw;
+  }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+  .cards__item {
+    width: 50vw;
+  }
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+  .cards__item {
+    width: 33vw;
+  }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+  .cards__item {
+    width: 33vw;
+  }
 }

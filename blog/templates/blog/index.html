@@ -4,9 +4,10 @@
   {% if query %}
   <div style="margin-top: 5px;"><h4>Results for: "{{ query }}"</h4></div>
   {% endif %}
-  <div class="card-columns">
+  <ul class="cards">
   {% if posts %}
   {% for post in posts %}
+  <li class="cards__item">
     <div class="card">
       {% if post.title_image %}
       <img class="card-img-top" src="{{ post.title_image.image.url }}"/>
@@ -34,9 +35,9 @@
       <div class="card-footer text-muted d-flex justify-content-between bg-transparent border-top-0">
         <div class="views">{{ post.updated_on }}</div>
       </div>
-    </div>
-
+    </li>
   {% endfor %}
+  </ul>
   {% else %}
       <p>No posts are available.</p>
   {% endif %}
