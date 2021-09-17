@@ -4,8 +4,8 @@
   {% if query %}
   <div style="margin-top: 5px;"><h4>Results for: "{{ query }}"</h4></div>
   {% endif %}
-  <ul class="cards">
   {% if posts %}
+  <ul class="cards">
   {% for post in posts %}
   <li class="cards__item">
     <div class="card">
@@ -39,9 +39,8 @@
   {% endfor %}
   </ul>
   {% else %}
-      <p>No posts are available.</p>
+      <p style="text-align: center;">No posts are available.</p>
   {% endif %}
-  </div>
 
   <div id="pagination-container">
     <ul id="pagination">
