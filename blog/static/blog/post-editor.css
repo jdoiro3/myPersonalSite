@@ -129,7 +129,33 @@ textarea {
 
 @media only screen and (max-width: 600px) {
   .flex-container-content {
-    justify-content: center;
     flex-direction: column;
   }
+
+  #user-container {
+    flex-direction: column;
+  }
+
+  #post-header {
+    height: 20vh;
+  }
+
+  #title {
+    margin-top: 5px;
+    margin-left: 5px;
+    width: 90vw;
+  }
+
+  #markdown-editor {
+    height: 50vh;
+  }
+
+  #markdown-editor, #content {
+    width: 91vw;
+  }
+
+  html, body{
+    overflow-x: hidden;
+}
+  
 }
