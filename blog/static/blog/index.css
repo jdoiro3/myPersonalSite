@@ -1,5 +1,3 @@
-
-
 body {
   background-color: #E4E6EB;
 }
@@ -10,10 +8,6 @@ body::-webkit-scrollbar {
 
 .card {
   min-height: 30%;
-}
-
-.btn-primary {
-  z-index: 100;
 }
 
 .bg-dark {
@@ -103,6 +97,7 @@ body::-webkit-scrollbar {
 
 .card-body {
   padding-bottom: 0px !important;
+  z-index: 0;
 }
 
 .sharing {
