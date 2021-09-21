@@ -180,15 +180,15 @@ header {
 
 
 #content blockquote {
-  font-size: 1.4em;
-  width:60%;
-  margin:50px auto;
-  font-family:Open Sans;
-  font-style:italic;
+  font-size: 1em;
+  width: 70%;
+  margin: 50px auto;
+  font-family: Open Sans;
+  font-style: italic;
   color: #555555;
-  padding:1.2em 30px 1.2em 75px;
-  border-left:8px solid rgb(24, 37, 52);
-  line-height:1.6;
+  padding: 1.2em 30px 1.2em 75px;
+  border-left: 8px solid rgb(24, 37, 52);
+  line-height: 1.6;
   position: relative;
   background:#EDEDED;
   z-index: auto;
@@ -244,6 +244,11 @@ header {
 
   #content {
     margin: 5px;
+  }
+
+  #content blockquote {
+    width: 100%;
+    font-size: 30px;
   }
 
 }
