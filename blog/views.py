@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django import template
 from django.http import HttpResponse
 from django.template import loader
@@ -101,18 +102,21 @@ def _get_edit_context(post):
 	user_profile = post.author.userprofile
 	return {'post': post, 'user_profile': user_profile, 'users': users, 'categories': categories}
 
+@login_required
 def post_editor(request, Id):
 	template = loader.get_template('blog/post-editor.html')
 	post = get_object_or_404(Post, id=Id)
 	context = _get_edit_context(post)
 	return HttpResponse(template.render(context, request))
 
+@login_required
 def new_post(request):
 	template = loader.get_template('blog/post-editor.html')
 	post = Post(title="", author=request.user, content="", slug="new")
 	context = _get_edit_context(post)
 	return HttpResponse(template.render(context, request))
 
+@login_required
 def post_image_upload(request):
 	image = request.FILES.get('image')
 	user = User.objects.get(id=request.POST.get('user', ''))
@@ -121,6 +125,7 @@ def post_image_upload(request):
 	data = json.dumps({'image': {'url': post_image.image.url, 'id': post_image.id}})
 	return HttpResponse(data, content_type='application/json')
 
+@login_required
 def delete_post(request, Id):
 	template = loader.get_template('blog/post-delete.html')
 	post = get_object_or_404(Post, id=Id)
