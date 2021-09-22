@@ -149,3 +149,5 @@ ALLOWED_HTML_TAGS = sanitizer.ALLOWED_TAGS + ['iframe', 'span']
 ALLOWED_HTML_ATTRS = sanitizer.ALLOWED_ATTRIBUTES
 ALLOWED_HTML_ATTRS['iframe'] = ['width', 'height', 'src', 'title', 'frameborder', 'allow', 'allowfullscreen']
 ALLOWED_HTML_ATTRS['blockquote'] = ['style']
+
+LOGIN_URL = "/admin/login/"
