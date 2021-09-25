@@ -1,5 +1,5 @@
 // Django function 
-// MOre info here: https://docs.djangoproject.com/en/3.0/ref/csrf/#ajax
+// More info here: https://docs.djangoproject.com/en/3.0/ref/csrf/#ajax
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -16,17 +16,17 @@ function getCookie(name) {
     return cookieValue;
 }
 
-// used for quote form
+// Displays the quote form.
 function openForm(form_id) {
     document.getElementById(form_id).style.display = "block";
 }
 
-// used for quote form
+// Removes the quote form.
 function closeForm(form_id) {
     document.getElementById(form_id).style.display = "none";
 }
   
-// adds a blockquote tag to the markdown editor
+// Adds a blockquote tag to the markdown editor.
 function addQuote() {
     let curPos = document.getElementById("markdown-editor").selectionStart;
     let content = $("#markdown-editor").val();
@@ -43,7 +43,7 @@ function addQuote() {
     document.getElementById('content').innerHTML = marked(markdown_elem.value);
 }
 
-// slugify the post title for the server to process
+// Slugify the post title for the server to process.
 function slugify(text)
 {
   return text.toString().toLowerCase()
@@ -54,7 +54,9 @@ function slugify(text)
     .replace(/-+$/, '');            // Trim - from end of text
 }
 
-// used when a new post is being created
+// Updates the form's save action endpoint with the post's title.
+// When the user inputs a title, the endpoint to save changes
+// needs to be updated with the slugified version of the title.
 function updateSaveAction() {
     let title = slugify(document.getElementById('title').value);
     let current_url = document.getElementById('save-changes').getAttribute('action');
@@ -87,21 +89,23 @@ function addImageHeader(image) {
     header_image_input.value = image["id"];
 }
 
-
-function uploadImage(endpoint, user, input, dom_action_func) {
-
-    // Select your input type file and store it in a variable
+// UPLOAD_IMAGE_ENDPOINT and USER are defined within a script tag in post-editor.html.
+// This is done so that we can use Django's templating engine to dynamically define the variables.
+function uploadImage(input, page_action) {
+    // select your input type file and store it in a variable
     let formData = new FormData();
     formData.append('image', input.files[0]);
-    formData.append('user', user);
+    formData.append('user', USER_ID);
     // get token
     const csrftoken = getCookie('csrftoken');
     console.log(input.files[0]);
-    fetch(endpoint, {
+    // async request without reloading the page
+    fetch(UPLOAD_IMAGE_ENDPOINT, {
         method: 'POST',
         credentials: 'same-origin',
         headers: {
             'Accept': 'application/json',
+            // we need to pass this token for Django
             'X-CSRFToken': csrftoken,
         },
         body: formData
@@ -110,7 +114,7 @@ function uploadImage(endpoint, user, input, dom_action_func) {
     ).then(
         image_data => {
             console.log(image_data);
-            dom_action_func(image_data['image']);
+            page_action(image_data['image']);
         }
     ).catch(
         error => console.log(error)
@@ -130,3 +134,13 @@ document.getElementById('markdown-editor').addEventListener('keydown', function(
         this.selectionEnd = start + 1;
     }
   });
+
+
+let markdown_elem = document.getElementById('markdown-editor');
+document.getElementById('content').innerHTML = marked(markdown_elem.value);
+
+markdown_elem.addEventListener("input", (event) => {
+    console.log("event running");
+    document.getElementById('content').innerHTML = marked(markdown_elem.value);
+    hljs.highlightAll();
+});

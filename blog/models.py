@@ -27,7 +27,8 @@ class Image(models.Model):
 		content = image.read()
 		sha1_hash = sha1(content)
 		ext = filename.split('.')[1]
-		return f'{sha1_hash.hexdigest()[0:2]}/{sha1_hash.hexdigest()[2:]}.{ext}'
+		hash = sha1_hash.hexdigest()
+		return f'{hash[0:2]}/{hash[2:]}.{ext}'
 
 	user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_images')
 	original_name = models.CharField(max_length=200)
