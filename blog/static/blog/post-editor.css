@@ -1,5 +1,3 @@
-
-
 #user-container {
   margin-left: 10px;
   margin: 10px;
@@ -30,7 +28,7 @@
 #status, #user, #category {
   font-size: 15px;
   border: solid 2px black;
-  margin-left: 5px;
+  margin-right: 5px;
 }
 
 #title {
@@ -81,50 +79,122 @@ textarea {
   margin-left: 5px;
 }
 
-/* The popup form - hidden by default */
-.form-popup {
+#selectors-container {
+  margin-left: 10px;
+}
+
+
+.row {
+  margin: 15px;
+}
+
+.image-container {
+  margin: 15px;
+  box-shadow: 0px 3px 15px rgba(0,0,0,0.2);
+  transition: .3s;
+}
+
+.image-container:hover {
+  box-shadow: 0px 20px 40px rgba(0,0,0,0.4);
+  transform: scale(1.05,1.05);
+}
+
+.image-container .mytooltip {
+  position: absolute;
+  bottom: -10px;
+  right: -10px;
+  visibility: hidden;
+}
+
+.image-container:hover .mytooltip {
+  visibility: visible;
+}
+
+.image-container:hover .remove-image {
+  display: inline;
+  text-decoration: none;
+}
+
+.image-container {
+  position: relative;
+}
+
+.remove-image, .close-button {
+  position: absolute;
+  border-radius: 10em;
+  padding: 2px 6px 3px;
+  text-decoration: none;
+  font: 700 21px/20px sans-serif;
+  background: #182534;
+  color: #FFF !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  -webkit-transition: background 0.5s;
+  transition: background 0.5s;
+}
+
+.remove-image {
   display: none;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  width: 500px;
-  height: 600px;
-  margin-left: -250px;
-  margin-top: -200px;
-  z-index: 9;
+  top: -10px;
+  right: -10px;
 }
 
-/* Add styles to the form container */
-.form-container {
-  padding: 10px;
-  background-color: white;
+.close-button {
+  top: -15px;
+  right: -15px;
 }
 
-/* Set a style for the submit/login button */
-.form-container .btn {
-  background-color: #343a40;
-  color: white;
-  padding: 16px 20px;
-  border: none;
+.close-button:hover {
+  text-decoration: none;
+}
+
+.remove-image:hover, .close-button:hover {
+  background: #E54E4E;
   cursor: pointer;
-  width: 100%;
-  margin-bottom:10px;
-  opacity: 0.8;
 }
 
-.form-container .add {
-  margin-top: 10px;
+.remove-image:active, .close-button:active {
+  background: #E54E4E;
+  cursor: pointer;
 }
 
-/* Add some hover effects to buttons */
-.form-container .btn:hover, .open-button:hover {
+
+
+.mytooltip .tooltiptext {
+  visibility: hidden;
+  min-width: 140px;
+  background-color: #555;
+  color: #fff;
+  text-align: left;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 150%;
+  left: 50%;
+  margin-left: -75px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.mytooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+.mytooltip:hover .tooltiptext {
+  visibility: visible;
   opacity: 1;
 }
 
-.form-container textarea {
-  width: 100%;
-  resize: none;
-}
+/* media queries */
+/* -------------------------------------*/
 
 
 @media only screen and (max-width: 600px) {
@@ -156,6 +226,14 @@ textarea {
 
   html, body{
     overflow-x: hidden;
+  }
 }
-  
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+  .image-container img {
+      max-width: 17vw;
+      height: 100%;
+      object-fit: cover;
+  }
 }

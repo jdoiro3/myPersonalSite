@@ -12,6 +12,11 @@ from django.apps import apps
 from myPersonalSite.settings import ALLOWED_HTML_TAGS, ALLOWED_HTML_ATTRS
 
 
+def chunks(iterator, n):
+	for i in range(0, len(iterator), n):
+		yield iterator[i:i + n]
+
+
 from .models import Post, User, PostCategory, Image
 
 def post_detail(request, slug):
@@ -96,34 +101,53 @@ def author_index(request, author_first_name, author_last_name):
 	context = {'posts': page_posts, 'categories': categories, 'category': 'All'}
 	return HttpResponse(template.render(context, request))
 
-def _get_edit_context(post):
+def _get_edit_context(post, include_images=False):
 	users = User.objects.all()
 	categories = PostCategory.objects.all()
 	user_profile = post.author.userprofile
+	if include_images:
+		post_images = Image.objects.filter(post=post.id)
+		post_image_chunks = list(chunks(post_images, 3))
+		return {'post': post, 'user_profile': user_profile, 'users': users, 'categories': categories, 'image_chunks': post_image_chunks}
 	return {'post': post, 'user_profile': user_profile, 'users': users, 'categories': categories}
 
 @login_required
 def post_editor(request, Id):
 	template = loader.get_template('blog/post-editor.html')
 	post = get_object_or_404(Post, id=Id)
-	context = _get_edit_context(post)
+	context = _get_edit_context(post, include_images=True)
 	return HttpResponse(template.render(context, request))
 
 @login_required
 def new_post(request):
 	template = loader.get_template('blog/post-editor.html')
 	post = Post(title="", author=request.user, content="", slug="new")
-	context = _get_edit_context(post)
+	context = _get_edit_context(post, include_images=True)
 	return HttpResponse(template.render(context, request))
 
 @login_required
 def post_image_upload(request):
 	image = request.FILES.get('image')
 	user = User.objects.get(id=request.POST.get('user', ''))
-	post_image = Image(user=user, original_name=image.name, image=image)
+	try:
+		post = Post.objects.get(id=request.POST.get('post_id'))
+		post_image = Image(user=user, original_name=image.name, image=image, post=post)
+	# If the post's id is 'None', it means this is a new post.
+	except ValueError:
+		# The post image's post field is null for now but it will be updated one the new post is
+		# saved. If the post isn't saved, image garbage collection will delete the image.
+		post_image = Image(user=user, original_name=image.name, image=image)
 	post_image.save()
 	data = json.dumps({'image': {'url': post_image.image.url, 'id': post_image.id}})
 	return HttpResponse(data, content_type='application/json')
+
+@login_required
+def delete_image(request):
+	image_id = request.POST.get('image_id')
+	image = Image.objects.get(id=image_id)
+	deleted_image_data = json.dumps({'image_id': image_id})
+	image.delete()
+	return HttpResponse(deleted_image_data, content_type='application/json')
 
 @login_required
 def delete_post(request, Id):
@@ -132,6 +156,7 @@ def delete_post(request, Id):
 	post.delete()
 	context = {'post': post}
 	return HttpResponse(template.render(context, request))
+
 
 
 

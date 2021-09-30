@@ -12,7 +12,9 @@
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script>
   const UPLOAD_IMAGE_ENDPOINT = "{% url 'blog:add-image' %}";
+  const DELETE_IMAGE_ENDPOINT = "{% url 'blog:delete-image' %}";
   const USER_ID = "{{ request.user.id }}";
+  const POST_ID = "{{ post.id }}";
 </script>
 <script src="{% static 'blog/post-editor.js' %}" defer></script>
 {% endblock %}
@@ -33,14 +35,37 @@
 {% block sharing %}{% endblock %}
 
 {% block user_select %}
-<select name="user" id="user" form="save-changes">
-  {% for user in users %}
-  <option value="{{ user.id }}" {% if post.author == user %}selected="selected"{% endif %}>{{ user.username }}</option>
-  {% endfor %}
-</select>
+<div class="selector">
+  <label for="user">Post Author:</label>
+  <select name="user" id="user" form="save-changes">
+    {% for user in users %}
+    <option value="{{ user.id }}" {% if post.author == user %}selected="selected"{% endif %}>{{ user.username }}</option>
+    {% endfor %}
+  </select>
+</div>
 {% endblock %}
 
 {% block post_content %}
+<div id="selectors-container">
+  <!-- selector for the post's status -->
+  <div class="selector">
+    <label for="status">Post Status:</label>
+    <select name="status" id="status" class="toolbar-item" form="save-changes">
+      <option value="0" {% if post.status == None or post.status == 0 %}selected="selected"{% endif %}>Draft</option>
+      <option value="1" {% if post.status == 1 %}selected="selected"{% endif %}>Publish</option>
+    </select>
+  </div>
+  <!-- selector for the post's category -->
+  <div class="selector">
+    <label for="category">Post Category:</label>
+    <select name="category" id="category" class="toolbar-item" form="save-changes" required>
+      {% if post.category == None %}<option label=" " style="display: none;" selected="selected"></option>{% endif %}
+      {% for cat in categories %}
+      <option value="{{ cat.id }}" {% if post.category == cat %}selected="selected"{% endif %}>{{ cat }}</option>
+      {% endfor %}
+    </select>
+  </div>
+</div>
 <div id="edit-toolbar">
   <!-- save changes form -->
   <form id="save-changes" action="{% url 'blog:post-detail' post.slug %}" method="post">
@@ -57,20 +82,10 @@
   <!-- add image to post button -->
   <button id="add-image-button" class="toolbar-item" type="button" title="add image to post"><i class="fas fa-image"></i></button>
   <input style="display: none;" id="add-image-input" class="toolbar-item" type="file" accept="image/*" name="image" onchange="uploadImage(this, addImageToPost)">
+  <!-- view and edit post images uploaded -->
+  <button type="button" class="toolbar-item" data-toggle="modal" data-target="#post-images-form" title="view and edit uploaded images"><i class="fas fa-images"></i></button>
   <!-- add quote button. displays a form -->
   <button type="button" class="toolbar-item" data-toggle="modal" data-target="#quote-form" title="add quote to post"><i class="fas fa-quote-left"></i></button>
-  <!-- selector for the post's status -->
-  <select name="status" id="status" class="toolbar-item" form="save-changes">
-    <option value="0" {% if post.status == None or post.status == 0 %}selected="selected"{% endif %}>Draft</option>
-    <option value="1" {% if post.status == 1 %}selected="selected"{% endif %}>Publish</option>
-  </select>
-  <!-- selector for the post's category -->
-  <select name="category" id="category" class="toolbar-item" form="save-changes" required>
-    {% if post.category == None %}<option label=" " style="display: none;" selected="selected"></option>{% endif %}
-    {% for cat in categories %}
-    <option value="{{ cat.id }}" {% if post.category == cat %}selected="selected"{% endif %}>{{ cat }}</option>
-    {% endfor %}
-  </select>
 </div>
 <div class="flex-container-content">
   <div id="markdown-editor-container"><textarea spellcheck="true" id="markdown-editor" cols=120 form="save-changes" name="markdown">{{ post.content }}</textarea></div>
@@ -79,6 +94,7 @@
 {% endblock %}
 
 {% block additions %}
+<!-- add quote Bootstrap Modal -->
 <div class="modal fade" id="quote-form" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
@@ -107,6 +123,53 @@
           <button type="button" class="btn btn-success" onclick="addQuote()">Add Quote</button>
         </div>
       </form>
+    </div>
+  </div>
+</div>
+
+<!-- post images Bootstrap Modal -->
+<div class="modal fade" id="post-images-form" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Uploaded Post Images</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <div id="images-container">
+            {% if image_chunks %}
+              {% for chunk in image_chunks %}
+                <div class="row" {% if forloop.last %}id="last-row"{% else %}id="row-{{ forloop.counter }}"{% endif %}>
+                  {% for image in chunk %}
+                    <div class="image-container" id="{{ image.id }}">
+                        <img class="img-fluid rounded" src='{{ image.image.url }}'>
+                        <a class="remove-image"><i class="fas fa-trash-alt"></i></a>
+                        <!-- copy the images url to the clipboard -->
+                        <input type="text" value="{{ image.image.url }}" id="url-{{ forloop.counter }}" style="display: none;">
+                        <div class="mytooltip" id="tooltip-{{ forloop.counter }}">
+                          <button class="toolbar-item" onclick="copyUrl('url-{{ forloop.counter }}', 'tooltip-{{ forloop.counter }}-text')" onmouseout="outFunc('tooltip-{{ forloop.counter }}-text')">
+                            <span class="tooltiptext" id="tooltip-{{ forloop.counter }}-text">Copy to clipboard</span>
+                            <i class="fas fa-link"></i>
+                          </button>
+                        </div>
+                    </div>
+                    {% if forloop.last %}
+                    <input id="last-image-id-number" type="text" value="{{ forloop.counter }}" style="display: none;">
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              {% endfor %}
+            {% else %}
+              <div class="row" id="last-row"></div>
+              <input id="last-image-id-number" type="text" value="1" style="display: none;">
+            {% endif %}
+              <button id="add-image-to-modal-button"><i class="fas fa-plus"></i></button>
+              <input style="display: none;" id="add-image-to-modal-input" class="toolbar-item" type="file" accept="image/*" name="image" onchange="uploadImage(this, addImageToUploadedModal)">
+          </div>
+      </div>
+      </div>
     </div>
   </div>
 </div>

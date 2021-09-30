@@ -12,4 +12,5 @@ urlpatterns = [
     path('edit/<str:Id>/', views.post_editor, name='post-edit'),
     path('delete/<str:Id>/', views.delete_post, name='delete-post'),
     path('image/upload', views.post_image_upload, name='add-image'),
+    path('image/delete', views.delete_image, name='delete-image'),
 ]
