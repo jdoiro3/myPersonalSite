@@ -143,27 +143,23 @@
               {% for chunk in image_chunks %}
                 <div class="row" {% if forloop.last %}id="last-row"{% else %}id="row-{{ forloop.counter }}"{% endif %}>
                   {% for image in chunk %}
-                    <div class="image-container" id="{{ image.id }}">
+                    <div class="image-container" id="image-container-{{ image.id }}">
                         <img class="img-fluid rounded" src='{{ image.image.url }}'>
-                        <a class="remove-image"><i class="fas fa-trash-alt"></i></a>
+                        <a class="remove-image" id="{{ image.id }}"><i class="fas fa-trash-alt"></i></a>
                         <!-- copy the images url to the clipboard -->
-                        <input type="text" value="{{ image.image.url }}" id="url-{{ forloop.counter }}" style="display: none;">
-                        <div class="mytooltip" id="tooltip-{{ forloop.counter }}">
-                          <button class="toolbar-item" onclick="copyUrl('url-{{ forloop.counter }}', 'tooltip-{{ forloop.counter }}-text')" onmouseout="outFunc('tooltip-{{ forloop.counter }}-text')">
-                            <span class="tooltiptext" id="tooltip-{{ forloop.counter }}-text">Copy to clipboard</span>
+                        <input type="text" value="{{ image.image.url }}" id="url-{{ image.id }}" style="display: none;">
+                        <div class="mytooltip" id="tooltip-{{ image.id }}">
+                          <button class="toolbar-item" onclick="copyUrl('url-{{ image.id }}', 'tooltip-{{ image.id }}-text')" onmouseout="outFunc('tooltip-{{ image.id }}-text')">
+                            <span class="tooltiptext" id="tooltip-{{ image.id }}-text">Copy to clipboard</span>
                             <i class="fas fa-link"></i>
                           </button>
                         </div>
                     </div>
-                    {% if forloop.last %}
-                    <input id="last-image-id-number" type="text" value="{{ forloop.counter }}" style="display: none;">
-                    {% endif %}
                   {% endfor %}
                 </div>
               {% endfor %}
             {% else %}
               <div class="row" id="last-row"></div>
-              <input id="last-image-id-number" type="text" value="1" style="display: none;">
             {% endif %}
               <button id="add-image-to-modal-button"><i class="fas fa-plus"></i></button>
               <input style="display: none;" id="add-image-to-modal-input" class="toolbar-item" type="file" accept="image/*" name="image" onchange="uploadImage(this, addImageToUploadedModal)">

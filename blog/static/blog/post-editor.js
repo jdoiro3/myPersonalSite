@@ -54,25 +54,43 @@ function updateSaveAction() {
     document.getElementById('save-changes').action = current_url.substring(0, current_url.lastIndexOf('/'))+`/${title}/`;
 }
 
-
+// Adds an image to the Bootstrap modal, which contains the post's uploaded images.
 function addImageToUploadedModal(image) {
-    let div = document.getElementById("last-row");
-    let next_image_id_num = toString(parseInt(document.getElementById("last-image-id-number").value) + 1);
-    div.innerHTML += `
-    <div class="image-container" id="${image['id']}">
+    let last_row = document.getElementById("last-row");
+    // we need to add a new row, since the layout works with 3 images in a row.
+    if (last_row.childElementCount > 2) {
+        // get the previous row's number (row-[int] -> [int]) and then invrement it by 1
+        let new_row_num = (parseInt(last_row.previousElementSibling.id.split("-")[1]) + 1).toString();
+        // the last row isn't the last row anymore, so we update the id with the new row number
+        last_row.id = `row-${new_row_num}`;
+        // get the images container (i.e., the parent of all row divs)
+        let images_container = last_row.parentElement;
+        // create a new row div
+        let new_row = document.createElement('div');
+        new_row.setAttribute('class', 'row');
+        new_row.setAttribute('id', 'last-row');
+        // get the add image button so we can insert the new row before it.
+        let add_image_btn = document.getElementById("add-image-to-modal-button");
+        images_container.insertBefore(new_row, add_image_btn);
+        row_to_add_image = new_row;
+    } else {
+        row_to_add_image = last_row;
+    }
+    row_to_add_image.innerHTML += `
+    <div class="image-container" id="image-container-${image['id']}">
         <img class="img-fluid rounded" src='${image['url']}'>
-        <a class="remove-image"><i class="fas fa-trash-alt"></i></a>
+        <a class="remove-image" id="${image['id']}"><i class="fas fa-trash-alt"></i></a>
         <!-- copy the images url to the clipboard -->
-        <input type="text" value="${image['url']}" id="url-${next_image_id_num}" style="display: none;">
-        <div class="mytooltip" id="tooltip-${next_image_id_num}">
-        <button class="toolbar-item" onclick="copyUrl('url-${next_image_id_num}', 'tooltip-${next_image_id_num}-text')" onmouseout="outFunc('tooltip-${next_image_id_num}-text')">
-            <span class="tooltiptext" id="tooltip-${next_image_id_num}-text">Copy to clipboard</span>
+        <input type="text" value="${image['url']}" id="url-${image['id']}" style="display: none;">
+        <div class="mytooltip" id="tooltip-${image['id']}">
+        <button class="toolbar-item" onclick="copyUrl('url-${image['id']}', 'tooltip-${image['id']}-text')" onmouseout="outFunc('tooltip-${image['id']}-text')">
+            <span class="tooltiptext" id="tooltip-${image['id']}-text">Copy to clipboard</span>
             <i class="fas fa-link"></i>
         </button>
         </div>
     </div>
     `;
-    div.querySelector(".remove-image").addEventListener("click", deleteImage);
+    document.getElementById(`${image['id']}`).addEventListener("click", deleteImage);
 }
 
 function addImageToPost(image) {
@@ -85,12 +103,14 @@ function addImageToPost(image) {
     addImageToUploadedModal(image);
 }
 
-function addImageHeader(image) {
+function addImageToHeader(image) {
     let header = document.getElementById("post-header");
     let header_image_input = document.getElementById("header-image-id");
     let image_url = image['url'];
     header.style = `background-image: url(${image_url});`
     header_image_input.value = image["id"];
+    // add the image to uploaded images modal
+    addImageToUploadedModal(image);
 }
 
 // UPLOAD_IMAGE_ENDPOINT and USER are defined within a script tag in post-editor.html.
@@ -125,7 +145,12 @@ function uploadImage(input, page_action) {
 };
 
 function deleteImage(event) {
-    let image_id = event.currentTarget.parentNode.id
+    let confirmed = confirm("Are you sure you want to delete this image?");
+    if (!confirmed) {
+        alert("Image not deleted.");
+        return;
+    }
+    let image_id = event.currentTarget.id;
     // select your input type file and store it in a variable
     let formData = new FormData();
     formData.append('image_id', image_id);
@@ -146,7 +171,18 @@ function deleteImage(event) {
     ).then(
         // remove the image from the page
         image_data => {
-            document.getElementById(`${image_data["image_id"]}`).remove()
+            document.getElementById(`image-container-${image_data["image_id"]}`).remove();
+            // check to see if the image that was deleted was the post's header image
+            let header_image_input = document.getElementById("header-image-id");
+            console.log(header_image_input.value);
+            console.log(image_data["image_id"]);
+            if (header_image_input.value === image_data["image_id"]) {
+                // the input element is set to -1 by default if the post has no header image
+                header_image_input.value = "-1";
+                // change the header to the default background color
+                let header = document.getElementById("post-header");
+                header.style = "background-color: rgb(24, 37, 52);";
+            }
         }
     ).catch(
         error => console.log(error)
@@ -173,7 +209,7 @@ function copyUrl(input_id, tooltip_id) {
     copyText.setSelectionRange(0, 99999);
     navigator.clipboard.writeText(copyText.value);
     var tooltip = document.getElementById(tooltip_id);
-    tooltip.innerHTML = "Copied: " + copyText.value;
+    tooltip.innerHTML = "Url Copied";
 }
   
 function outFunc(tooltip_id) {

@@ -94,11 +94,6 @@ textarea {
   transition: .3s;
 }
 
-.image-container:hover {
-  box-shadow: 0px 20px 40px rgba(0,0,0,0.4);
-  transform: scale(1.05,1.05);
-}
-
 .image-container .mytooltip {
   position: absolute;
   bottom: -10px;
