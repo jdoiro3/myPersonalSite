@@ -41,7 +41,7 @@ function addQuote() {
     }
     let text_to_insert = `<blockquote>${quote}<span>${link}</span></blockquote>`;
     $("#markdown-editor").val(content.slice(0, curPos) + text_to_insert + content.slice(curPos));
-    document.getElementById('content').innerHTML = marked(markdown_elem.value);
+    document.getElementById('content').innerHTML = marked.parse(markdown_elem.value);
 }
 
 // Updates the form's save action endpoint with the post's title.
@@ -98,7 +98,7 @@ function addImageToPost(image) {
     let content = $("#markdown-editor").val();
     let text_to_insert = `![image](${image['url']})`;
     $("#markdown-editor").val(content.slice(0, curPos) + text_to_insert + content.slice(curPos));
-    document.getElementById('content').innerHTML = marked(markdown_elem.value);
+    document.getElementById('content').innerHTML = marked.parse(markdown_elem.value);
     // add the image to uploaded images modal
     addImageToUploadedModal(image);
 }
@@ -245,13 +245,13 @@ document.getElementById('add-image-to-modal-button').addEventListener('click', f
 
 // Select the markdown editor's content and render it into the post preview.
 let markdown_elem = document.getElementById('markdown-editor');
-document.getElementById('content').innerHTML = marked(markdown_elem.value);
+document.getElementById('content').innerHTML = marked.parse(markdown_elem.value);
 hljs.highlightAll();
 
 // This listens for changes in the markdown editor and renders the content
 // to the post preview.
 markdown_elem.addEventListener("input", (event) => {
-    document.getElementById('content').innerHTML = marked(markdown_elem.value);
+    document.getElementById('content').innerHTML = marked.parse(markdown_elem.value);
     hljs.highlightAll();
 });
 
