@@ -1,6 +1,6 @@
 # myPersonalSite
 
-This Django project currently only holds one app, my personal blog. The blog is hosted [here](https://joseph-doiron-blog.herokuapp.com/). I'm planning on adding additional apps to this site in the future.
+This Django project currently only holds one app: my personal blog. The blog is hosted [here](https://joseph-doiron-blog.herokuapp.com/). I'm planning on adding additional apps to this site in the future.
 
 ## Technologies Used
 
